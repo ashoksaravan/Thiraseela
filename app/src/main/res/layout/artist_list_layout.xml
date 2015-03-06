@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="2dp"
+    android:clickable="false"
     card_view:cardCornerRadius="4dp"
     card_view:elevation="5dp">
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="?android:attr/listPreferredItemHeight">
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:clickable="false">
 
         <ImageView
             android:id="@+id/icon"
@@ -21,6 +23,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="6dip"
             android:layout_marginRight="6dip"
+            android:clickable="false"
             android:contentDescription="@string/icon"
             android:src="@mipmap/ic_launcher" />
 
@@ -33,6 +36,7 @@
             android:layout_alignParentRight="true"
             android:layout_toEndOf="@id/icon"
             android:layout_toRightOf="@id/icon"
+            android:clickable="false"
             android:ellipsize="marquee"
             android:singleLine="true"
             android:textSize="12sp" />
@@ -48,6 +52,7 @@
             android:layout_alignWithParentIfMissing="true"
             android:layout_toEndOf="@id/icon"
             android:layout_toRightOf="@id/icon"
+            android:clickable="false"
             android:gravity="center_vertical"
             android:textColor="#d50000"
             android:textSize="16sp"

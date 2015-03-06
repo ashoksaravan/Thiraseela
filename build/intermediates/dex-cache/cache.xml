@@ -2,46 +2,46 @@
 <items version="2" >
 
     <item
-        jar="E:\Android\workspace\Thiraseela\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="E:\Android\workspace\Thiraseela\app\build\intermediates\pre-dexed\debug\classes-bc6f54ea45fbf05f7762dddc515ff97038b9743d.jar" />
-    </item>
-    <item
-        jar="E:\Android\workspace\Thiraseela\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="E:\Android\workspace\Thiraseela\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-8f8c4b7db109bb1c7467ffbbb6dd1774073ac3bf.jar" />
-    </item>
-    <item
-        jar="E:\Android\workspace\Thiraseela\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="E:\Android\workspace\Thiraseela\app\build\intermediates\pre-dexed\debug\classes-e20a8daa74c8cbcfdd2e99631a24e41e4099140b.jar" />
-    </item>
-    <item
-        jar="E:\Android\android-sdk-windows\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jar="/home/local/BSILIND/asokh.saravanan/Android/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="E:\Android\workspace\Thiraseela\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-0cf50ddb7c9803da7da887482dfb3deff4a4aeab.jar" />
+        <dex dex="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-269647e753e226bd275f2918f761d7308b7dd2f6.jar" />
     </item>
     <item
-        jar="E:\Android\workspace\Thiraseela\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\21.0.3\classes.jar"
+        jar="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/pre-dexed/debug/classes-216d2fd9862ecee4974b4d1c23df385bf71d2cbf.jar" />
+    </item>
+    <item
+        jar="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="00b0b7233e1ec64acebfac40d4983d32d4712426">
-        <dex dex="E:\Android\workspace\Thiraseela\app\build\intermediates\pre-dexed\debug\classes-6330d16e79d320baf75f4f64be00367ab5c3b7e8.jar" />
+        <dex dex="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/pre-dexed/debug/classes-4ee79a0b3e7d90789d6ad9c5a6bb239e858fbf51.jar" />
     </item>
     <item
-        jar="E:\Android\workspace\Thiraseela\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\21.0.3\classes.jar"
+        jar="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4b8945fc23a7461c6fdde15753456d64b0a9358b">
-        <dex dex="E:\Android\workspace\Thiraseela\app\build\intermediates\pre-dexed\debug\classes-09c3cecedae732a61472f15751e42a4dcd2543b8.jar" />
+        <dex dex="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/pre-dexed/debug/classes-363a11d95c047be86a179dfb93445ebcecaf3f27.jar" />
+    </item>
+    <item
+        jar="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-82face134a5a424f09059eb848445fb4184a4b94.jar" />
+    </item>
+    <item
+        jar="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/home/local/BSILIND/asokh.saravanan/Ashok/Thiraseela/trunk/app/build/intermediates/pre-dexed/debug/classes-eefe9bfe4342796ee7a1660be4c545100a80d0a5.jar" />
     </item>
 
 </items>

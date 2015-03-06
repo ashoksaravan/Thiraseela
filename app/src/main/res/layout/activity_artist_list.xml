@@ -1,12 +1,58 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mainbg"
-    tools:context="com.ashoksm.thiraseela.ArtistListActivity" >
+    tools:context="com.ashoksm.thiraseela.ArtistListActivity">
 
-    <android.support.v7.widget.Toolbar
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize">
+
+        <EditText
+            android:id="@+id/search_artist"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_alignParentTop="true"
+            android:background="#ffffff"
+            android:hint="@string/search_artist" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/search_artist">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/artist_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/info"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:scrollbars="vertical" />
+
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/accentColor"
+                android:gravity="center"
+                android:text="@string/info"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/my_awesome_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,15 +61,4 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/artist_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/my_awesome_toolbar"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="5dp"
-        android:scrollbars="vertical" />
-
-</RelativeLayout>
+</FrameLayout>

@@ -1,11 +1,14 @@
 package com.ashoksm.thiraseela;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Toast;
 
 import com.ashoksm.thiraseela.adapter.ArtistListAdapter;
 import com.ashoksm.thiraseela.vo.ArtistListVO;
@@ -15,7 +18,7 @@ import java.util.List;
 
 public class ArtistListActivity extends ActionBarActivity {
 
-    private static boolean scroll_down;
+    public static final String EXTRA_PERFORMER_NAME = "EXTRA_PERFORMER_NAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +28,7 @@ public class ArtistListActivity extends ActionBarActivity {
         toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
         setSupportActionBar(toolbar);
 
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.artist_list_view);
+        final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.artist_list_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -36,7 +39,7 @@ public class ArtistListActivity extends ActionBarActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //set adapter
-        List<ArtistListVO> list = new ArrayList<>();
+        final List<ArtistListVO> list = new ArrayList<>();
         list.add(new ArtistListVO("Anju K Chandran", "Classical Dancer", "http://thiraseela.com/gleimo/performers/images/perfomr471/thumb/Perfmr_img.jpeg"));
         list.add(new ArtistListVO("Lekshmi harilal", "Bhavakala", "http://thiraseela.com/gleimo/performers/images/perfomr468/thumb/Perfmr_img.jpeg"));
         list.add(new ArtistListVO("Janeeta Rose Thomas", "Bharatanatyam Dancer", "http://thiraseela.com/gleimo/performers/images/perfomr465/thumb/Perfmr_img.jpeg"));
@@ -48,5 +51,19 @@ public class ArtistListActivity extends ActionBarActivity {
         list.add(new ArtistListVO("Emelee Ghosh", "Kathak Dancer", "http://thiraseela.com/gleimo/performers/images/perfomr439/thumb/Perfmr_img.jpeg"));
         ArtistListAdapter adapter = new ArtistListAdapter(list, this);
         mRecyclerView.setAdapter(adapter);
+
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        ArtistListVO item = list.get(position);
+                        Intent intent = new Intent(getApplicationContext(), ArtistDetailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(EXTRA_PERFORMER_NAME, item.getName());
+                        getApplicationContext().startActivity(intent);
+                    }
+                })
+        );
     }
 }

@@ -51,6 +51,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashoksm.thiraseela.MainActivity" />
         </activity>
+        <activity
+            android:name=".ArtistDetailActivity"
+            android:label="@string/title_activity_artist_detail"
+            android:parentActivityName=".ArtistListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashoksm.thiraseela.ArtistListActivity" />
+        </activity>
     </application>
 
 </manifest>
