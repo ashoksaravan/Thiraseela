@@ -1,0 +1,113 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/mainbg"
+    android:gravity="center"
+    android:paddingTop="10dp"
+    tools:context=".MainActivity">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_thiraseelalogo" />
+
+            <TextView
+                android:id="@+id/about"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/logo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/about"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/artists"
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_below="@+id/about"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_selector"
+                android:text="@string/artists"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/troupes"
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_below="@+id/artists"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_selector"
+                android:text="@string/troupes"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/academy"
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_below="@+id/troupes"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_selector"
+                android:text="@string/academy"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/events"
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_below="@+id/academy"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_selector"
+                android:text="@string/events"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/about_us"
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_below="@+id/events"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_selector"
+                android:text="@string/about_us"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/accentColor"
+        android:gravity="center"
+        android:text="@string/info"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
