@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/artist_detail_view"
     tools:context="com.ashoksm.thiraseela.ArtistDetailActivity">
 
     <ImageView
@@ -9,7 +10,7 @@
         android:layout_height="fill_parent"
         android:contentDescription="@string/icon"
         android:scaleType="fitXY"
-        android:src="@drawable/bg_1" />
+        android:src="@drawable/inner_bg" />
 
     <ScrollView
         android:layout_width="match_parent"

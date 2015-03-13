@@ -8,7 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/bg_1" />
+        android:src="@drawable/home_bg" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 <ImageView
                     android:id="@+id/logo"
                     android:layout_width="wrap_content"
-                    android:layout_height="100dp"
+                    android:layout_height="75dp"
                     android:contentDescription="@string/icon"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_thiraseelalogo" />
@@ -106,7 +106,7 @@
             android:background="@color/accentColor"
             android:gravity="center"
             android:text="@string/info"
-            android:textColor="#000000"
+            android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold" />
 
