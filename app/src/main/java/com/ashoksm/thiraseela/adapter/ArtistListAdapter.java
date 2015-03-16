@@ -18,70 +18,70 @@ import java.util.List;
 
 public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.ViewHolder> {
 
-	private List<ArtistListVO> artistListVOs;
-	private int lastPosition = -1;
-	private Context context;
+    private List<ArtistListVO> artistListVOs;
+    private int lastPosition = -1;
+    private Context context;
 
-	// Provide a reference to the views for each data item
-	// Complex data items may need more than one view per item, and
-	// you provide access to all the views for a data item in a view holder
-	public class ViewHolder extends RecyclerView.ViewHolder {
-		// each data item is just a string in this case
-		public TextView txtHeader;
-		public TextView txtFooter;
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public TextView txtHeader;
+        public TextView txtFooter;
         public ImageView imageView;
-		public View view;
+        public View view;
 
-		public ViewHolder(View v) {
-			super(v);
-			txtHeader = (TextView) v.findViewById(R.id.firstLine);
-			txtFooter = (TextView) v.findViewById(R.id.secondLine);
+        public ViewHolder(View v) {
+            super(v);
+            txtHeader = (TextView) v.findViewById(R.id.firstLine);
+            txtFooter = (TextView) v.findViewById(R.id.secondLine);
             imageView = (ImageView) v.findViewById(R.id.icon);
-			view = v;
-		}
-	}
+            view = v;
+        }
+    }
 
 
-	// Provide a suitable constructor (depends on the kind of dataset)
-	public ArtistListAdapter(List<ArtistListVO> artistListVOsIn, Context contextIn) {
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public ArtistListAdapter(List<ArtistListVO> artistListVOsIn, Context contextIn) {
         artistListVOs = artistListVOsIn;
-		context = contextIn;
-	}
+        context = contextIn;
+    }
 
-	// Create new views (invoked by the layout manager)
-	@Override
-	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		// create a new view
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.artist_list_layout, parent, false);
-		// set the view's size, margins, padding and layout parameters
-		ViewHolder vh = new ViewHolder(v);
-		return vh;
-	}
+    // Create new views (invoked by the layout manager)
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // create a new view
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.artist_list_layout, parent, false);
+        // set the view's size, margins, padding and layout parameters
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
+    }
 
-	// Replace the contents of a view (invoked by the layout manager)
-	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
-		// - get element from your dataset at this position
-		// - replace the contents of the view with that element
-		final ArtistListVO artistListVO = artistListVOs.get(position);
-		holder.txtHeader.setText(artistListVO.getName());
-		holder.txtFooter.setText(artistListVO.getDesignation());
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        // - get element from your dataset at this position
+        // - replace the contents of the view with that element
+        final ArtistListVO artistListVO = artistListVOs.get(position);
+        holder.txtHeader.setText(artistListVO.getName());
+        holder.txtFooter.setText(artistListVO.getDesignation());
         new DownloadImageTask(holder.imageView).execute(artistListVO.getUrl());
         setAnimation(holder.view, position);
-	}
+    }
 
-	private void setAnimation(View viewToAnimate, int position) {
-		// If the bound view wasn't previously displayed on screen, it's
-		// animated
-		Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom
-				: R.anim.down_from_top);
-		viewToAnimate.startAnimation(animation);
-		lastPosition = position;
-	}
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's
+        // animated
+        Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom
+                : R.anim.down_from_top);
+        viewToAnimate.startAnimation(animation);
+        lastPosition = position;
+    }
 
-	// Return the size of your dataset (invoked by the layout manager)
-	@Override
-	public int getItemCount() {
-		return artistListVOs.size();
-	}
+    // Return the size of your dataset (invoked by the layout manager)
+    @Override
+    public int getItemCount() {
+        return artistListVOs.size();
+    }
 }

@@ -17,4 +17,7 @@
     <string name="search_artist">Search by name</string>
     <string name="title_activity_artist_detail">ArtistDetailActivity</string>
     <string name="performer_img">Performer Image</string>
+    <string name="title_activity_troupes_detail">TroupesDetailActivity</string>
+    <string name="title_activity_academy_detail">AcademyDetailActivity</string>
+    <string name="title_activity_events_detail">EventsDetailActivity</string>
 </resources>

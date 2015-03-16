@@ -59,6 +59,30 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashoksm.thiraseela.ArtistListActivity" />
         </activity>
+        <activity
+            android:name=".TroupesDetailActivity"
+            android:label="@string/title_activity_troupes_detail"
+            android:parentActivityName=".TroupesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashoksm.thiraseela.TroupesListActivity" />
+        </activity>
+        <activity
+            android:name=".AcademyDetailActivity"
+            android:label="@string/title_activity_academy_detail"
+            android:parentActivityName=".AcademyListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashoksm.thiraseela.AcademyListActivity" />
+        </activity>
+        <activity
+            android:name=".EventsDetailActivity"
+            android:label="@string/title_activity_events_detail"
+            android:parentActivityName=".EventsListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ashoksm.thiraseela.EventsListActivity" />
+        </activity>
     </application>
 
 </manifest>

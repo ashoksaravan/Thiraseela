@@ -1,16 +1,14 @@
 package com.ashoksm.thiraseela;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 
-import com.ashoksm.thiraseela.adapter.ArtistListAdapter;
 import com.ashoksm.thiraseela.adapter.TroupesListAdapter;
-import com.ashoksm.thiraseela.vo.ArtistListVO;
 import com.ashoksm.thiraseela.vo.TroupesListVO;
 
 import java.util.ArrayList;
@@ -18,6 +16,8 @@ import java.util.List;
 
 
 public class TroupesListActivity extends ActionBarActivity {
+
+    public static final String EXTRA_TROUPE_NAME = "EXTRA_TROUPE_NAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +38,24 @@ public class TroupesListActivity extends ActionBarActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //set adapter
-        List<TroupesListVO> list = new ArrayList<>();
+        final List<TroupesListVO> list = new ArrayList<>();
         list.add(new TroupesListVO("Trivandrum Brothers", "Panchavadyam", "kowadiyar, Trivandrum", "http://thiraseela.com/gleimo/Troupes/images/truopes32/thumb/logo.jpeg"));
         list.add(new TroupesListVO("Dreams Thiruvananthapuram", "Mimics", "Thampanoor, Trivandrum", "http://thiraseela.com/gleimo/Troupes/images/truopes48/thumb/logo.jpeg"));
         list.add(new TroupesListVO("Thengumvila bhagavathi kalasamithi", "Sinkarimelam", "Chirayinkeezhu,Trivandrum", "http://thiraseela.com/gleimo/Troupes/images/truopes41/thumb/logo.jpeg"));
         TroupesListAdapter adapter = new TroupesListAdapter(list, this);
         mRecyclerView.setAdapter(adapter);
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        TroupesListVO item = list.get(position);
+                        Intent intent = new Intent(getApplicationContext(), TroupesDetailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(EXTRA_TROUPE_NAME, item.getName());
+                        getApplicationContext().startActivity(intent);
+                    }
+                })
+        );
     }
 }
