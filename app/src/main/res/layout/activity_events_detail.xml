@@ -54,14 +54,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Event Name"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="Monthly Programs @ Changampuzha Park"
                             android:textColor="#000000" />
                     </LinearLayout>
@@ -74,14 +74,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Category"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="Performance"
                             android:textColor="#000000" />
                     </LinearLayout>
@@ -94,14 +94,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="By"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="Changampuzha Park"
                             android:textColor="#000000" />
                     </LinearLayout>
@@ -114,14 +114,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Venue"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="Changampuzha Park, Edappally"
                             android:textColor="#000000" />
                     </LinearLayout>
@@ -134,14 +134,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="City"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="Ernakulam"
                             android:textColor="#000000" />
                     </LinearLayout>
@@ -154,14 +154,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Date"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="01 Mar 15-31 Mar 15"
                             android:textColor="#000000" />
                     </LinearLayout>
@@ -174,14 +174,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Time"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="9AM To  6PM"
                             android:textColor="#000000" />
                     </LinearLayout>
@@ -217,14 +217,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Name"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="Changampuzha Park"
                             android:textColor="#000000" />
 
@@ -238,14 +238,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Mobile"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="98478 53719"
                             android:textColor="#000000" />
 
@@ -259,14 +259,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Email"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="changampuzhapark@gmail.com"
                             android:textColor="#000000" />
 
@@ -280,14 +280,14 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
                             android:text="Website"
                             android:textColor="#000000" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight=".6"
+                            android:layout_weight=".8"
                             android:text="changampuzhapark.com"
                             android:textColor="#000000" />
 

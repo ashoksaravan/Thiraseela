@@ -22,7 +22,8 @@
             android:name=".ArtistListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_artist_list"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -30,7 +31,8 @@
         <activity
             android:name=".TroupesListActivity"
             android:label="@string/title_activity_troupes_list"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashoksm.thiraseela.MainActivity" />
@@ -38,7 +40,8 @@
         <activity
             android:name=".AcademyListActivity"
             android:label="@string/title_activity_academy_list"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashoksm.thiraseela.MainActivity" />
@@ -46,7 +49,8 @@
         <activity
             android:name=".EventsListActivity"
             android:label="@string/title_activity_events_list"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ashoksm.thiraseela.MainActivity" />
