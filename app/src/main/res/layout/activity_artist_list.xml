@@ -48,8 +48,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/info"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:scrollbars="vertical" />
 
             <TextView
