@@ -11,59 +11,91 @@
         android:scaleType="fitXY"
         android:src="@drawable/inner_bg" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingTop="?attr/actionBarSize">
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/search_artist"
+        <LinearLayout
+            android:id="@+id/progressLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentTop="true"
-            android:layout_margin="6dip"
-            android:background="#ffffff"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="2dp">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/search_bar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff"
-                android:drawableLeft="@drawable/ic_searchicon"
-                android:drawableStart="@drawable/ic_searchicon"
-                android:hint="@string/search_artist" />
-        </android.support.v7.widget.CardView>
+            <ProgressBar
+                android:id="@+id/pbHeaderProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/loading"
+                android:textColor="@color/accentColor"
+                android:textIsSelectable="false"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/search_artist">
+            android:id="@+id/contentLayout"
+            android:visibility="gone">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/artist_list_view"
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/search_artist"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentTop="true"
+                android:layout_margin="6dip"
+                android:background="#ffffff"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="2dp">
+
+                <EditText
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:drawableLeft="@drawable/ic_searchicon"
+                    android:drawableStart="@drawable/ic_searchicon"
+                    android:hint="@string/search_artist" />
+            </android.support.v7.widget.CardView>
+
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/info"
-                android:scrollbars="vertical" />
+                android:layout_below="@+id/search_artist">
 
-            <TextView
-                android:id="@+id/info"
-                android:layout_width="fill_parent"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/accentColor"
-                android:gravity="center"
-                android:text="@string/info"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/artist_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/info"
+                    android:scrollbars="vertical" />
 
+                <TextView
+                    android:id="@+id/info"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/accentColor"
+                    android:gravity="center"
+                    android:text="@string/info"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/my_awesome_toolbar"

@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.ashoksm.thiraseela.adapter.ArtistListAdapter;
+import com.ashoksm.thiraseela.dto.ArtistListDTO;
 import com.ashoksm.thiraseela.vo.ArtistListVO;
 
 import java.util.ArrayList;
@@ -38,24 +39,15 @@ public class AcademyListActivity extends ActionBarActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //set adapter
-        final List<ArtistListVO> list = new ArrayList<>();
-        list.add(new ArtistListVO("Bharatanjali Academy for Indian Dances", "Vanchiyoor,Trivandrum", "http://thiraseela.com/gleimo/Academy/images/academy9/thumb/logo.jpeg", "", "", ""));
-        list.add(new ArtistListVO("Nishrinkala Dance Academy", "Hyderabad,Andhra Pradesh", "http://thiraseela.com/gleimo/Academy/images/academy43/thumb/logo.jpeg", "", "", ""));
-        list.add(new ArtistListVO("Murali Sangeeth Music Ackademy", "Kochi,Ernakulam", "http://thiraseela.com/gleimo/Academy/images/academy21/thumb/logo.jpeg", "", "", ""));
-        list.add(new ArtistListVO("Sree Sankara School of Dance", "Kalady,Ernakulam", "http://thiraseela.com/gleimo/Academy/images/academy33/thumb/logo.jpeg", "", "", ""));
-        list.add(new ArtistListVO("Akshaya Dance School", "West Fort,Trivandrum", "http://thiraseela.com/gleimo/Academy/images/academy65/thumb/logo.jpeg", "", "", ""));
-        list.add(new ArtistListVO("Kerala Folklore Akademi", "Chirakkal,Kannur", "http://thiraseela.com/gleimo/Academy/images/academy12/thumb/logo.jpeg", "", "", ""));
-        list.add(new ArtistListVO("Margi Theatre", "East Fort,Trivandrum", "http://thiraseela.com/gleimo/Academy/images/academy4/thumb/logo.jpeg", "", "", ""));
-        list.add(new ArtistListVO("Kerala Kalamandalam", "Cheruthuruthy,Thrissur", "http://thiraseela.com/gleimo/Academy/images/academy3/thumb/logo.jpeg", "", "", ""));
-        list.add(new ArtistListVO("Kalabharathi Foundation for Indian Culture and Heritage", "Thrissur,Thrissur", "http://thiraseela.com/gleimo/Academy/images/academy68/thumb/logo.jpeg", "", "", ""));
-        ArtistListAdapter adapter = new ArtistListAdapter(list, this);
+        final List<ArtistListDTO> list = new ArrayList<>();
+       ArtistListAdapter adapter = new ArtistListAdapter(list, this);
         mRecyclerView.setAdapter(adapter);
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        ArtistListVO item = list.get(position);
+                        ArtistListDTO item = list.get(position);
                         Intent intent = new Intent(getApplicationContext(), AcademyDetailActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra(EXTRA_ACADEMY_NAME, item.getName());

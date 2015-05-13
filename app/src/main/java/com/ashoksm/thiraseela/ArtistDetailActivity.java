@@ -1,31 +1,50 @@
 package com.ashoksm.thiraseela;
 
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.ashoksm.thiraseela.dto.ArtistDetailDTO;
+import com.ashoksm.thiraseela.wsclient.WSClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 
 
-public class ArtistDetailActivity extends ActionBarActivity implements SimpleGestureFilter.SimpleGestureListener{
+public class ArtistDetailActivity extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener {
 
     private SimpleGestureFilter detector;
 
     private int i;
 
-    private TextView performerName;
+    private TextView about;
 
     private ImageView performerImage;
 
     private TextView designation;
 
     private TextView location;
+
+    private TextView address;
+
+    private TextView mobile;
+
+    private TextView phone;
+
+    private TextView email;
+
+    private TextView web;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +57,22 @@ public class ArtistDetailActivity extends ActionBarActivity implements SimpleGes
 
         String name = getIntent().getStringExtra(ArtistListActivity.EXTRA_PERFORMER_NAME);
         i = Integer.valueOf(name);
-        performerName = (TextView) findViewById(R.id.performer_profile);
+        about = (TextView) findViewById(R.id.performer_profile);
         performerImage = (ImageView) findViewById(R.id.performer_img);
         designation = (TextView) findViewById(R.id.designation);
         location = (TextView) findViewById(R.id.location);
+        address = (TextView) findViewById(R.id.address);
+        mobile = (TextView) findViewById(R.id.mobile);
+        phone = (TextView) findViewById(R.id.phone);
+        email = (TextView) findViewById(R.id.email);
+        web = (TextView) findViewById(R.id.web);
         loadDetails();
         // Detect touched area
         detector = new SimpleGestureFilter(this, this);
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent me) {
+    public boolean dispatchTouchEvent(@NonNull MotionEvent me) {
         // Call onTouchEvent of SimpleGestureFilter class
         this.detector.onTouchEvent(me);
         return super.dispatchTouchEvent(me);
@@ -56,41 +80,98 @@ public class ArtistDetailActivity extends ActionBarActivity implements SimpleGes
 
     @Override
     public void onSwipe(int direction) {
-        String str = "";
 
         switch (direction) {
 
             case SimpleGestureFilter.SWIPE_RIGHT:
-                str = "Swipe Right";
-                if(i != 0) {
+                if (i != 0) {
                     i--;
                     loadDetails();
                 }
                 break;
             case SimpleGestureFilter.SWIPE_LEFT:
-                str = "Swipe Left";
-                if(i != ArtistListActivity.ARTIST_LIST_VOS.size()-1) {
+                if (i != ArtistListActivity.ARTIST_LIST_VOS.size() - 1) {
                     i++;
                     loadDetails();
                 }
                 break;
         }
-        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
 
     private void loadDetails() {
-        performerName.setText(ArtistListActivity.ARTIST_LIST_VOS.get(i).getAbout());
-        performerImage.setImageResource(R.mipmap.ic_launcher);
-        designation.setText(ArtistListActivity.ARTIST_LIST_VOS.get(i).getDesignation());
-        location.setText(ArtistListActivity.ARTIST_LIST_VOS.get(i).getLocation());
-        getSupportActionBar().setTitle(ArtistListActivity.ARTIST_LIST_VOS.get(i).getName());
-        new DownloadImageTask(performerImage).execute(ArtistListActivity.ARTIST_LIST_VOS.get(i).getPerformerImage());
+        new AsyncTask<Void, Void, Void>() {
+            ArtistDetailDTO artistDetailDTO = new ArtistDetailDTO();
+            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
+            LinearLayout contentLayout = (LinearLayout) findViewById(R.id.contentLayout);
+
+            @Override
+            protected void onPreExecute() {
+                // SHOW THE SPINNER WHILE LOADING FEEDS
+                progressLayout.setVisibility(View.VISIBLE);
+                contentLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                ObjectMapper mapper = new ObjectMapper();
+                String response = WSClient.execute(String.valueOf(ArtistListActivity.ARTIST_LIST_VOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/performerdetailservice.php");
+                Log.d("response", response);
+
+                try {
+                    artistDetailDTO = mapper.readValue(response, ArtistDetailDTO.class);
+                } catch (IOException e) {
+                    Log.e("ArtistDetailActivity", e.getLocalizedMessage());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                about.setText(artistDetailDTO.getAbout());
+                performerImage.setImageResource(R.mipmap.ic_launcher);
+                designation.setText(ArtistListActivity.ARTIST_LIST_VOS.get(i).getTitle());
+                location.setText(artistDetailDTO.getPlace() + ", " + artistDetailDTO.getCity());
+                if (artistDetailDTO.getAddress() != null && artistDetailDTO.getAddress().trim().length() > 0) {
+                    address.setText(artistDetailDTO.getAddress());
+                } else {
+                    address.setVisibility(View.GONE);
+                }
+                if (artistDetailDTO.getMobile() != null && artistDetailDTO.getMobile().trim().length() > 0) {
+                    mobile.setText(artistDetailDTO.getMobile());
+                } else {
+                    mobile.setVisibility(View.GONE);
+                }
+                if (artistDetailDTO.getPhone() != null && artistDetailDTO.getPhone().trim().length() > 0) {
+                    phone.setText(artistDetailDTO.getPhone());
+                } else {
+                    phone.setVisibility(View.GONE);
+                }
+                if (artistDetailDTO.getEmail() != null && artistDetailDTO.getEmail().trim().length() > 0) {
+                    email.setText(artistDetailDTO.getEmail());
+                } else {
+                    email.setVisibility(View.GONE);
+                }
+                if (artistDetailDTO.getWebsite() != null && artistDetailDTO.getWebsite().trim().length() > 0) {
+                    web.setText(artistDetailDTO.getWebsite());
+                } else {
+                    web.setVisibility(View.GONE);
+                }
+                if (getSupportActionBar() != null && ArtistListActivity.ARTIST_LIST_VOS.get(i) != null) {
+                    getSupportActionBar().setTitle(ArtistListActivity.ARTIST_LIST_VOS.get(i).getName());
+                }
+                new DownloadImageTask(performerImage).execute("http://thiraseela.com/gleimo/performers/images/perfomr" + ArtistListActivity.ARTIST_LIST_VOS.get(i).getId() + "/Perfmr_img.jpeg");
+                // HIDE THE SPINNER WHILE LOADING FEEDS
+                progressLayout.setVisibility(View.GONE);
+                contentLayout.setVisibility(View.VISIBLE);
+            }
+        }.execute();
     }
+
     @Override
     public void onDoubleTap() {
     }
 
-    @Override
+@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();

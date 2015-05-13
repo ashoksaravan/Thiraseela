@@ -7,18 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ashoksm.thiraseela.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
-import com.ashoksm.thiraseela.vo.ArtistListVO;
+import com.ashoksm.thiraseela.dto.ArtistListDTO;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.ViewHolder> {
+public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.ViewHolder> implements Filterable {
 
-    private List<ArtistListVO> artistListVOs;
+    private List<ArtistListDTO> artistListDTOs;
+    private List<ArtistListDTO> filteredArtistListDTOs;
     private int lastPosition = -1;
     private Context context;
 
@@ -43,8 +48,10 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ArtistListAdapter(List<ArtistListVO> artistListVOsIn, Context contextIn) {
-        artistListVOs = artistListVOsIn;
+    public ArtistListAdapter(List<ArtistListDTO> artistListVOsIn, Context contextIn) {
+        artistListDTOs = artistListVOsIn;
+        filteredArtistListDTOs = new ArrayList<>();
+        filteredArtistListDTOs.addAll(artistListVOsIn);
         context = contextIn;
     }
 
@@ -63,10 +70,11 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final ArtistListVO artistListVO = artistListVOs.get(position);
-        holder.txtHeader.setText(artistListVO.getName());
-        holder.txtFooter.setText(artistListVO.getDesignation());
-        new DownloadImageTask(holder.imageView).execute(artistListVO.getUrl());
+        final ArtistListDTO artistListDTO = filteredArtistListDTOs.get(position);
+        holder.txtHeader.setText(artistListDTO.getName());
+        holder.txtFooter.setText(artistListDTO.getTitle());
+        holder.imageView.setImageResource(R.mipmap.ic_launcher);
+        new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/gleimo/performers/images/perfomr" + artistListDTO.getId() + "/thumb/Perfmr_img.jpeg");
         setAnimation(holder.view, position);
     }
 
@@ -82,6 +90,56 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return artistListVOs.size();
+        return filteredArtistListDTOs.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new ArtistFilter(this, artistListDTOs);
+    }
+
+    private static class ArtistFilter extends Filter {
+
+        private final ArtistListAdapter adapter;
+
+        private final List<ArtistListDTO> originalList;
+
+        private final List<ArtistListDTO> filteredList;
+
+        private ArtistFilter(ArtistListAdapter adapter, List<ArtistListDTO> originalList) {
+            super();
+            this.adapter = adapter;
+            this.originalList = new LinkedList<>(originalList);
+            this.filteredList = new ArrayList<>();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+
+            if (constraint.length() == 0) {
+                filteredList.addAll(originalList);
+            } else {
+                final String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (final ArtistListDTO artistListDTO : originalList) {
+                    if (artistListDTO.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(artistListDTO);
+                    }
+                }
+            }
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            adapter.filteredArtistListDTOs.clear();
+            adapter.filteredArtistListDTOs.addAll((ArrayList<ArtistListDTO>) results.values);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 }

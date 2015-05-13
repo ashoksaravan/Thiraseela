@@ -7,18 +7,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ashoksm.thiraseela.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
-import com.ashoksm.thiraseela.vo.TroupesListVO;
+import com.ashoksm.thiraseela.dto.ArtistListDTO;
+import com.ashoksm.thiraseela.dto.TroupeListDTO;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.ViewHolder> {
+public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.ViewHolder> implements Filterable {
 
-    private List<TroupesListVO> artistListVOs;
+    private List<TroupeListDTO> troupeListDTOs;
+    private List<TroupeListDTO> filteredTroupeListDTOs;
     private int lastPosition = -1;
     private Context context;
 
@@ -45,8 +51,10 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TroupesListAdapter(List<TroupesListVO> artistListVOsIn, Context contextIn) {
-        artistListVOs = artistListVOsIn;
+    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn, Context contextIn) {
+        this.troupeListDTOs = troupeListDTOsIn;
+        filteredTroupeListDTOs = new ArrayList<>();
+        filteredTroupeListDTOs.addAll(troupeListDTOsIn);
         context = contextIn;
     }
 
@@ -55,9 +63,7 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.troupes_list_layout, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -65,11 +71,12 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final TroupesListVO artistListVO = artistListVOs.get(position);
-        holder.txtHeader.setText(artistListVO.getName());
-        holder.txtFooter.setText(artistListVO.getDesignation());
-        holder.location.setText(artistListVO.getLocation());
-        new DownloadImageTask(holder.imageView).execute(artistListVO.getUrl());
+        final TroupeListDTO troupeListDTO = filteredTroupeListDTOs.get(position);
+        holder.txtHeader.setText(troupeListDTO.getName());
+        holder.txtFooter.setText(troupeListDTO.getPrgrmName());
+        holder.location.setText(troupeListDTO.getPlace() + ", " + troupeListDTO.getCity());
+        holder.imageView.setImageResource(R.mipmap.ic_launcher);
+        new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/gleimo/Troupes/images/truopes" + troupeListDTO.getId() + "/thumb/logo.jpeg");
 
         setAnimation(holder.view, position);
     }
@@ -86,6 +93,55 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return artistListVOs.size();
+        return filteredTroupeListDTOs.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new TroupesFilter(this, troupeListDTOs);
+    }
+
+    private static class TroupesFilter extends Filter {
+
+        private final TroupesListAdapter adapter;
+
+        private final List<TroupeListDTO> originalList;
+
+        private final List<TroupeListDTO> filteredList;
+
+        private TroupesFilter(TroupesListAdapter adapter, List<TroupeListDTO> originalList) {
+            super();
+            this.adapter = adapter;
+            this.originalList = new LinkedList<>(originalList);
+            this.filteredList = new ArrayList<>();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+
+            if (constraint.length() == 0) {
+                filteredList.addAll(originalList);
+            } else {
+                final String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (final TroupeListDTO troupeListDTO : originalList) {
+                    if (troupeListDTO.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(troupeListDTO);
+                    }
+                }
+            }
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            adapter.filteredTroupeListDTOs.clear();
+            adapter.filteredTroupeListDTOs.addAll((ArrayList<TroupeListDTO>) results.values);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

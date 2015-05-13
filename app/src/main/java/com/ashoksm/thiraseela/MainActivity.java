@@ -3,26 +3,21 @@ package com.ashoksm.thiraseela;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 
-public class MainActivity extends ActionBarActivity {
-
-    private Button artists;
-    private Button troupes;
-    private Button academy;
-    private Button events;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        artists = (Button) findViewById(R.id.artists);
-        troupes = (Button) findViewById(R.id.troupes);
-        academy = (Button) findViewById(R.id.academy);
-        events = (Button) findViewById(R.id.events);
+        Button artists = (Button) findViewById(R.id.artists);
+        Button troupes = (Button) findViewById(R.id.troupes);
+        Button academy = (Button) findViewById(R.id.academy);
+        Button events = (Button) findViewById(R.id.events);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
         StrictMode.setThreadPolicy(policy);
