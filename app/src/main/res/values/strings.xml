@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Thiraseela</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="about">An Online Media for Performing Arts</string>
     <string name="artists">Artists</string>
     <string name="troupes">Troupes</string>
@@ -20,4 +18,5 @@
     <string name="title_activity_troupes_detail">TroupesDetailActivity</string>
     <string name="title_activity_academy_detail">AcademyDetailActivity</string>
     <string name="title_activity_events_detail">EventsDetailActivity</string>
+    <string name="home">Home</string>
 </resources>

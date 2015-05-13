@@ -45,8 +45,6 @@
                 android:id="@+id/academy_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:scrollbars="vertical" />
 
             <TextView
