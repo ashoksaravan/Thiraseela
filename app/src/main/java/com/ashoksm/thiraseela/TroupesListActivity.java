@@ -95,7 +95,6 @@ public class TroupesListActivity extends AppCompatActivity {
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        TroupeListDTO item = TROUPE_LIST_DTOS.get(position);
                         Intent intent = new Intent(getApplicationContext(), TroupesDetailActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra(EXTRA_TROUPE_ID, String.valueOf(position));
@@ -115,7 +114,9 @@ public class TroupesListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                adapter.getFilter().filter(s.toString());
+                if(adapter != null) {
+                    adapter.getFilter().filter(s.toString());
+                }
             }
         });
     }

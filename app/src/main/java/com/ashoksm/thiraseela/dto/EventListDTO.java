@@ -49,6 +49,15 @@ public class EventListDTO {
 	/** web. */
 	private String web;
 
+	/** category. */
+	private String category;
+
+	/** logo. */
+	private String logo;
+
+	/** tsimg. */
+	private String tsimg;
+
 	/**
 	 * @return the id
 	 */
@@ -257,5 +266,29 @@ public class EventListDTO {
 	 */
 	public final void setWeb(String web) {
 		this.web = web;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public String getTsimg() {
+		return tsimg;
+	}
+
+	public void setTsimg(String tsimg) {
+		this.tsimg = tsimg;
 	}
 }

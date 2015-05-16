@@ -76,7 +76,7 @@ public class ArtistListActivity extends AppCompatActivity {
                                 TypeFactory.defaultInstance().constructCollectionType(List.class, ArtistListDTO.class));
                         ARTIST_LIST_VOS.addAll(temp);
                     } catch (IOException e) {
-                        Log.e("MainActivity", e.getLocalizedMessage());
+                        Log.e("ArtistListActivity", e.getLocalizedMessage());
                     }
                 }
                 return null;
@@ -113,7 +113,9 @@ public class ArtistListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                adapter.getFilter().filter(s.toString());
+                if(adapter != null) {
+                    adapter.getFilter().filter(s.toString());
+                }
             }
         });
     }

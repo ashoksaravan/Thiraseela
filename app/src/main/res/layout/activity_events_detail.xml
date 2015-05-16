@@ -29,8 +29,9 @@
                 android:id="@+id/performer_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:contentDescription="@string/performer_img"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 android:src="@mipmap/ic_launcher" />
 
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -55,14 +56,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Event Name"
+                            android:text="@string/event_name"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/event_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="Monthly Programs @ Changampuzha Park"
                             android:textColor="#000000" />
                     </LinearLayout>
 
@@ -75,14 +76,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Category"
+                            android:text="@string/category"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/category"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="Performance"
                             android:textColor="#000000" />
                     </LinearLayout>
 
@@ -95,14 +96,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="By"
+                            android:text="@string/by"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/by"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="Changampuzha Park"
                             android:textColor="#000000" />
                     </LinearLayout>
 
@@ -115,14 +116,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Venue"
+                            android:text="@string/venue"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/venue"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="Changampuzha Park, Edappally"
                             android:textColor="#000000" />
                     </LinearLayout>
 
@@ -135,14 +136,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="City"
+                            android:text="@string/city"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/city"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="Ernakulam"
                             android:textColor="#000000" />
                     </LinearLayout>
 
@@ -155,14 +156,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Date"
+                            android:text="@string/date"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/date"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="01 Mar 15-31 Mar 15"
                             android:textColor="#000000" />
                     </LinearLayout>
 
@@ -175,14 +176,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Time"
+                            android:text="@string/time"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/time"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="9AM To  6PM"
                             android:textColor="#000000" />
                     </LinearLayout>
                 </LinearLayout>
@@ -206,7 +207,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/colorPrimary"
-                        android:text="Contact Details"
+                        android:text="@string/contact_details"
                         android:textColor="#ffffff" />
 
                     <LinearLayout
@@ -218,19 +219,20 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Name"
+                            android:text="@string/name"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/contact_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="Changampuzha Park"
                             android:textColor="#000000" />
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/mobile_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp">
@@ -239,19 +241,21 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Mobile"
+                            android:text="@string/mobile"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/mobile"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="98478 53719"
+                            android:autoLink="all"
                             android:textColor="#000000" />
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/phone_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp">
@@ -260,19 +264,21 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Email"
+                            android:text="@string/phone"
                             android:textColor="#000000" />
 
                         <TextView
+                            android:id="@+id/phone"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="changampuzhapark@gmail.com"
+                            android:autoLink="all"
                             android:textColor="#000000" />
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/email_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp">
@@ -281,14 +287,39 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
-                            android:text="Website"
+                            android:text="@string/email"
                             android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/email"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".8"
+                            android:autoLink="all"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/web_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight=".2"
+                            android:autoLink="all"
+                            android:text="@string/website"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/web"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:text="changampuzhapark.com"
+                            android:autoLink="all"
                             android:textColor="#000000" />
 
                     </LinearLayout>

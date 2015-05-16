@@ -18,6 +18,19 @@
     <string name="title_activity_troupes_detail">TroupesDetailActivity</string>
     <string name="title_activity_academy_detail">AcademyDetailActivity</string>
     <string name="title_activity_events_detail">EventsDetailActivity</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
 	<string name="home">Home</string>
+    <string name="event_name">Event Name</string>
+    <string name="category">Category</string>
+    <string name="by">By</string>
+    <string name="venue">Venue</string>
+    <string name="city">City</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="contact_details">Contact Details</string>
+    <string name="name">Name</string>
+    <string name="mobile">Mobile</string>
+    <string name="email">Email</string>
+    <string name="website">Website</string>
+    <string name="phone">phone</string>
 </resources>

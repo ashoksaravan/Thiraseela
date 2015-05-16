@@ -1,5 +1,6 @@
 package com.ashoksm.thiraseela;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -106,6 +107,9 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
 
             @Override
             protected void onPreExecute() {
+                if (getSupportActionBar() != null && ArtistListActivity.ARTIST_LIST_VOS.get(i) != null) {
+                    getSupportActionBar().setTitle(ArtistListActivity.ARTIST_LIST_VOS.get(i).getName());
+                }
                 // SHOW THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.VISIBLE);
                 contentLayout.setVisibility(View.GONE);
@@ -155,9 +159,6 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
                     web.setText(artistDetailDTO.getWebsite());
                 } else {
                     web.setVisibility(View.GONE);
-                }
-                if (getSupportActionBar() != null && ArtistListActivity.ARTIST_LIST_VOS.get(i) != null) {
-                    getSupportActionBar().setTitle(ArtistListActivity.ARTIST_LIST_VOS.get(i).getName());
                 }
                 new DownloadImageTask(performerImage).execute("http://thiraseela.com/gleimo/performers/images/perfomr" + ArtistListActivity.ARTIST_LIST_VOS.get(i).getId() + "/Perfmr_img.jpeg");
                 // HIDE THE SPINNER WHILE LOADING FEEDS

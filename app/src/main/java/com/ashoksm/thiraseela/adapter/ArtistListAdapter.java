@@ -61,8 +61,7 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.artist_list_layout, parent, false);
         // set the view's size, margins, padding and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)

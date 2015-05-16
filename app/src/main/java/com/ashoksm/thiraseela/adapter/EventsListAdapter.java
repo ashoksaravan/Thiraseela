@@ -7,18 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ashoksm.thiraseela.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
-import com.ashoksm.thiraseela.vo.EventsVO;
+import com.ashoksm.thiraseela.dto.EventListDTO;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
-public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.ViewHolder> {
+public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.ViewHolder> implements Filterable {
 
-    private List<EventsVO> eventsVOs;
+    private List<EventListDTO> eventListDTOs;
+    private List<EventListDTO> filteredArtistListDTOs;
     private int lastPosition = -1;
     private Context context;
 
@@ -49,8 +57,10 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public EventsListAdapter(List<EventsVO> artistListVOsIn, Context contextIn) {
-        eventsVOs = artistListVOsIn;
+    public EventsListAdapter(List<EventListDTO> eventListDTOsIn, Context contextIn) {
+        eventListDTOs = eventListDTOsIn;
+        filteredArtistListDTOs = new ArrayList<>();
+        filteredArtistListDTOs.addAll(eventListDTOsIn);
         context = contextIn;
     }
 
@@ -60,8 +70,7 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.events_list_layout, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -69,13 +78,21 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final EventsVO eventsVO = eventsVOs.get(position);
-        holder.txtHeader.setText(eventsVO.getName());
-        holder.txtFooter.setText(eventsVO.getPerformance());
-        holder.location.setText(eventsVO.getLocation());
-        holder.date.setText(eventsVO.getDate());
-        holder.time.setText(eventsVO.getTime());
-        new DownloadImageTask(holder.imageView).execute(eventsVO.getUrl());
+        final EventListDTO eventListDTO = filteredArtistListDTOs.get(position);
+        holder.txtHeader.setText(eventListDTO.getName());
+        holder.txtFooter.setText(eventListDTO.getEventType() + " | " + eventListDTO.getArtistName());
+        holder.location.setText(eventListDTO.getVenue());
+        holder.imageView.setImageResource(R.mipmap.ic_launcher);
+        DateFormat df = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
+        if(!eventListDTO.getStart().equals(eventListDTO.getEnd())) {
+            holder.date.setText("Date : " + df.format(eventListDTO.getStart()) + " - " + df.format(eventListDTO.getEnd()));
+        } else {
+            holder.date.setText("On : " + df.format(eventListDTO.getStart()));
+        }
+        holder.time.setText("Time : " + eventListDTO.getFromTime() + " - " + eventListDTO.getToTime());
+        if(eventListDTO.getTsimg() != null && eventListDTO.getTsimg().trim().length() > 0) {
+            new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/" + eventListDTO.getTsimg());
+        }
         setAnimation(holder.view, position);
     }
 
@@ -91,6 +108,55 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return eventsVOs.size();
+        return eventListDTOs.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new EventsFilter(this, eventListDTOs);
+    }
+
+    private static class EventsFilter extends Filter {
+
+        private final EventsListAdapter adapter;
+
+        private final List<EventListDTO> originalList;
+
+        private final List<EventListDTO> filteredList;
+
+        private EventsFilter(EventsListAdapter adapter, List<EventListDTO> originalList) {
+            super();
+            this.adapter = adapter;
+            this.originalList = new LinkedList<>(originalList);
+            this.filteredList = new ArrayList<>();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+
+            if (constraint.length() == 0) {
+                filteredList.addAll(originalList);
+            } else {
+                final String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (final EventListDTO eventListDTO : originalList) {
+                    if (eventListDTO.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(eventListDTO);
+                    }
+                }
+            }
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            adapter.filteredArtistListDTOs.clear();
+            adapter.filteredArtistListDTOs.addAll((ArrayList<EventListDTO>) results.values);
+            adapter.notifyDataSetChanged();
+        }
     }
 }
