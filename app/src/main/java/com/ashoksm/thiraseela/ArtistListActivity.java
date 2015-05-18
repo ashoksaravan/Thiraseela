@@ -84,7 +84,7 @@ public class ArtistListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new ArtistListAdapter(ARTIST_LIST_VOS, ArtistListActivity.this);
+                adapter = new ArtistListAdapter(ARTIST_LIST_VOS);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);
@@ -98,7 +98,9 @@ public class ArtistListActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(), ArtistDetailActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra(EXTRA_PERFORMER_NAME, String.valueOf(position));
+                        ArtistListDTO artistListDTO = adapter.getFilteredArtistListDTOs().get(position);
+                        int i = ARTIST_LIST_VOS.indexOf(artistListDTO);
+                        intent.putExtra(EXTRA_PERFORMER_NAME, String.valueOf(i));
                         getApplicationContext().startActivity(intent);
                     }
                 })

@@ -83,7 +83,7 @@ public class TroupesListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new TroupesListAdapter(TROUPE_LIST_DTOS, TroupesListActivity.this);
+                adapter = new TroupesListAdapter(TROUPE_LIST_DTOS);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);
@@ -97,7 +97,9 @@ public class TroupesListActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(), TroupesDetailActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra(EXTRA_TROUPE_ID, String.valueOf(position));
+                        TroupeListDTO troupeListDTO = adapter.getFilteredTroupeListDTOs().get(position);
+                        int i = TROUPE_LIST_DTOS.indexOf(troupeListDTO);
+                        intent.putExtra(EXTRA_TROUPE_ID, String.valueOf(i));
                         getApplicationContext().startActivity(intent);
                     }
                 })
@@ -114,7 +116,7 @@ public class TroupesListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(adapter != null) {
+                if (adapter != null) {
                     adapter.getFilter().filter(s.toString());
                 }
             }

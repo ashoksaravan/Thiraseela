@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -103,7 +104,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
         new AsyncTask<Void, Void, Void>() {
             ArtistDetailDTO artistDetailDTO = new ArtistDetailDTO();
             LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
-            LinearLayout contentLayout = (LinearLayout) findViewById(R.id.contentLayout);
+            ScrollView contentLayout = (ScrollView) findViewById(R.id.contentLayout);
 
             @Override
             protected void onPreExecute() {

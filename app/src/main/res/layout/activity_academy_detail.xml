@@ -52,11 +52,11 @@
             android:gravity="center"
             android:orientation="vertical">
 
-
             <ImageView
                 android:id="@+id/performer_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:contentDescription="@string/performer_img"
                 android:scaleType="fitXY"
                 android:src="@mipmap/ic_launcher" />
@@ -92,16 +92,32 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/address"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_communication_email"
-                        android:drawablePadding="5dp"
-                        android:drawableStart="@drawable/ic_communication_email"
-                        android:gravity="top"
-                        android:paddingLeft="5dp"
-                        android:textColor="#000000" />
+                        android:paddingBottom="1dp"
+                        android:paddingTop="1dp">
+
+                        <ImageView
+                            android:id="@+id/addressImg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:contentDescription="@string/info"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_communication_email" />
+
+                        <TextView
+                            android:id="@+id/address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/addressImg"
+                            android:layout_toRightOf="@id/addressImg"
+                            android:gravity="top"
+                            android:textColor="#000000" />
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/mobile"
@@ -112,7 +128,9 @@
                         android:drawablePadding="5dp"
                         android:drawableStart="@drawable/ic_communication_stay_current_portrait"
                         android:gravity="top"
+                        android:paddingBottom="1dp"
                         android:paddingLeft="5dp"
+                        android:paddingTop="1dp"
                         android:textColor="#000000" />
 
                     <TextView
@@ -124,7 +142,9 @@
                         android:drawablePadding="5dp"
                         android:drawableStart="@drawable/ic_maps_local_phone"
                         android:gravity="top"
+                        android:paddingBottom="1dp"
                         android:paddingLeft="5dp"
+                        android:paddingTop="1dp"
                         android:textColor="#000000" />
 
                     <TextView
@@ -136,7 +156,9 @@
                         android:drawablePadding="5dp"
                         android:drawableStart="@drawable/ic_emailicon"
                         android:gravity="top"
+                        android:paddingBottom="1dp"
                         android:paddingLeft="5dp"
+                        android:paddingTop="1dp"
                         android:textColor="#000000" />
 
                     <TextView
@@ -148,7 +170,9 @@
                         android:drawablePadding="5dp"
                         android:drawableStart="@drawable/ic_webicon"
                         android:gravity="top"
+                        android:paddingBottom="1dp"
                         android:paddingLeft="5dp"
+                        android:paddingTop="1dp"
                         android:textColor="#000000" />
                 </LinearLayout>
 

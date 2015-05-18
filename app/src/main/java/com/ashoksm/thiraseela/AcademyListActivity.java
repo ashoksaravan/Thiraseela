@@ -85,7 +85,7 @@ public class AcademyListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new AcademyListAdapter(ACADEMY_LIST_DTOS, AcademyListActivity.this);
+                adapter = new AcademyListAdapter(ACADEMY_LIST_DTOS);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);
@@ -100,7 +100,9 @@ public class AcademyListActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(), AcademyDetailActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra(EXTRA_ACADEMY_ID, String.valueOf(position));
+                        AcademyListDTO academyListDTO = adapter.getFilteredAcademyListDTOs().get(position);
+                        int i = ACADEMY_LIST_DTOS.indexOf(academyListDTO);
+                        intent.putExtra(EXTRA_ACADEMY_ID, String.valueOf(i));
                         getApplicationContext().startActivity(intent);
                     }
                 })

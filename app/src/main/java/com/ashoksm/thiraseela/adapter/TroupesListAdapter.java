@@ -1,12 +1,9 @@
 package com.ashoksm.thiraseela.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -14,7 +11,6 @@ import android.widget.TextView;
 
 import com.ashoksm.thiraseela.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
-import com.ashoksm.thiraseela.dto.ArtistListDTO;
 import com.ashoksm.thiraseela.dto.TroupeListDTO;
 
 import java.util.ArrayList;
@@ -24,9 +20,7 @@ import java.util.List;
 public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.ViewHolder> implements Filterable {
 
     private List<TroupeListDTO> troupeListDTOs;
-    private List<TroupeListDTO> filteredTroupeListDTOs;
-    private int lastPosition = -1;
-    private Context context;
+    private List<TroupeListDTO> filteredTroupeListDTOs = new ArrayList<>();
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -37,7 +31,6 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
         public TextView txtFooter;
         public TextView location;
         public ImageView imageView;
-        public View view;
 
         public ViewHolder(View v) {
             super(v);
@@ -45,17 +38,14 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
             imageView = (ImageView) v.findViewById(R.id.icon);
             location = (TextView) v.findViewById(R.id.thirdLine);
-            view = v;
         }
     }
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn, Context contextIn) {
+    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn) {
         this.troupeListDTOs = troupeListDTOsIn;
-        filteredTroupeListDTOs = new ArrayList<>();
         filteredTroupeListDTOs.addAll(troupeListDTOsIn);
-        context = contextIn;
     }
 
     // Create new views (invoked by the layout manager)
@@ -77,17 +67,6 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
         holder.location.setText(troupeListDTO.getPlace() + ", " + troupeListDTO.getCity());
         holder.imageView.setImageResource(R.mipmap.ic_launcher);
         new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/gleimo/Troupes/images/truopes" + troupeListDTO.getId() + "/thumb/logo.jpeg");
-
-        setAnimation(holder.view, position);
-    }
-
-    private void setAnimation(View viewToAnimate, int position) {
-        // If the bound view wasn't previously displayed on screen, it's
-        // animated
-        Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom
-                : R.anim.down_from_top);
-        viewToAnimate.startAnimation(animation);
-        lastPosition = position;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -143,5 +122,9 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
             adapter.filteredTroupeListDTOs.addAll((ArrayList<TroupeListDTO>) results.values);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    public List<TroupeListDTO> getFilteredTroupeListDTOs() {
+        return filteredTroupeListDTOs;
     }
 }

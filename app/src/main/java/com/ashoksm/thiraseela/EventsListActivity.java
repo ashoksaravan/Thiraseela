@@ -85,7 +85,7 @@ public class EventsListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new EventsListAdapter(EVENT_LIST_DTOS, EventsListActivity.this);
+                adapter = new EventsListAdapter(EVENT_LIST_DTOS);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);
@@ -99,7 +99,9 @@ public class EventsListActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(), EventsDetailActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra(EXTRA_EVENT_NAME, String.valueOf(position));
+                        EventListDTO eventListDTO = adapter.getFilteredArtistListDTOs().get(position);
+                        int i = EVENT_LIST_DTOS.indexOf(eventListDTO);
+                        intent.putExtra(EXTRA_EVENT_NAME, String.valueOf(i));
                         getApplicationContext().startActivity(intent);
                     }
                 })
@@ -116,7 +118,7 @@ public class EventsListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(adapter != null) {
+                if (adapter != null) {
                     adapter.getFilter().filter(s.toString());
                 }
             }

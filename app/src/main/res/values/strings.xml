@@ -5,7 +5,7 @@
     <string name="troupes">Troupes</string>
     <string name="academy">Academy</string>
     <string name="events">Events</string>
-    <string name="about_us">About us</string>
+    <string name="about_us">About Us</string>
     <string name="info">info@thiraseela.com</string>
     <string name="title_activity_artist_list">Performing Artists</string>
     <string name="title_activity_troupes_list">Troupes</string>
@@ -13,11 +13,11 @@
     <string name="title_activity_academy_list">Academy</string>
     <string name="title_activity_events_list">Events</string>
     <string name="search_artist">Search by name</string>
-    <string name="title_activity_artist_detail">ArtistDetailActivity</string>
+    <string name="title_activity_artist_detail">Artist Detail</string>
     <string name="performer_img">Performer Image</string>
-    <string name="title_activity_troupes_detail">TroupesDetailActivity</string>
-    <string name="title_activity_academy_detail">AcademyDetailActivity</string>
-    <string name="title_activity_events_detail">EventsDetailActivity</string>
+    <string name="title_activity_troupes_detail">Troupes Detail</string>
+    <string name="title_activity_academy_detail">Academy Detail</string>
+    <string name="title_activity_events_detail">Events Details</string>
     <string name="loading">Loading…</string>
 	<string name="home">Home</string>
     <string name="event_name">Event Name</string>

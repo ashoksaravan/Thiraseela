@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         Button troupes = (Button) findViewById(R.id.troupes);
         Button academy = (Button) findViewById(R.id.academy);
         Button events = (Button) findViewById(R.id.events);
+        Button aboutUS = (Button) findViewById(R.id.about_us);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -52,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EventsListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+        aboutUS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AboutUSActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(intent);
             }

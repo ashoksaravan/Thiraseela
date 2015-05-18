@@ -1,12 +1,9 @@
 package com.ashoksm.thiraseela.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -23,9 +20,8 @@ import java.util.List;
 public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.ViewHolder> implements Filterable {
 
     private List<AcademyListDTO> academyListDTOs;
-    private List<AcademyListDTO> filteredAcademyListDTOs;
-    private int lastPosition = -1;
-    private Context context;
+
+    private List<AcademyListDTO> filteredAcademyListDTOs = new ArrayList<>();
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -35,24 +31,20 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         public TextView txtHeader;
         public TextView txtFooter;
         public ImageView imageView;
-        public View view;
 
         public ViewHolder(View v) {
             super(v);
             txtHeader = (TextView) v.findViewById(R.id.firstLine);
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
             imageView = (ImageView) v.findViewById(R.id.icon);
-            view = v;
         }
     }
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public AcademyListAdapter(List<AcademyListDTO> academyListDTOsIn, Context contextIn) {
+    public AcademyListAdapter(List<AcademyListDTO> academyListDTOsIn) {
         this.academyListDTOs = academyListDTOsIn;
-        filteredAcademyListDTOs = new ArrayList<>();
         filteredAcademyListDTOs.addAll(academyListDTOsIn);
-        context = contextIn;
     }
 
     // Create new views (invoked by the layout manager)
@@ -71,19 +63,9 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         // - replace the contents of the view with that element
         final AcademyListDTO academyListDTO = filteredAcademyListDTOs.get(position);
         holder.txtHeader.setText(academyListDTO.getName());
-        holder.txtFooter.setText(academyListDTO.getPlace() + ", " +academyListDTO.getCity());
+        holder.txtFooter.setText(academyListDTO.getPlace() + ", " + academyListDTO.getCity());
         holder.imageView.setImageResource(R.mipmap.ic_launcher);
         new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/gleimo/Academy/images/academy" + academyListDTO.getId() + "/thumb/logo.jpeg");
-        setAnimation(holder.view, position);
-    }
-
-    private void setAnimation(View viewToAnimate, int position) {
-        // If the bound view wasn't previously displayed on screen, it's
-        // animated
-        Animation animation = AnimationUtils.loadAnimation(context, (position > lastPosition) ? R.anim.up_from_bottom
-                : R.anim.down_from_top);
-        viewToAnimate.startAnimation(animation);
-        lastPosition = position;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -141,4 +123,7 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         }
     }
 
+    public List<AcademyListDTO> getFilteredAcademyListDTOs() {
+        return filteredAcademyListDTOs;
+    }
 }

@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -109,7 +110,7 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
         new AsyncTask<Void, Void, Void>() {
             TroupeDetailDTO troupeDetailDTO = new TroupeDetailDTO();
             LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
-            LinearLayout contentLayout = (LinearLayout) findViewById(R.id.contentLayout);
+            ScrollView contentLayout = (ScrollView) findViewById(R.id.contentLayout);
 
             @Override
             protected void onPreExecute() {
@@ -127,7 +128,7 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
                 try {
                     troupeDetailDTO = mapper.readValue(response, TroupeDetailDTO.class);
                 } catch (IOException e) {
-                    Log.e("ArtistDetailActivity", e.getLocalizedMessage());
+                    Log.e("TroupesDetailActivity", e.getLocalizedMessage());
                 }
                 return null;
             }
