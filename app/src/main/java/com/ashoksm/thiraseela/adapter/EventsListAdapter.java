@@ -12,7 +12,6 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ashoksm.thiraseela.utils.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.dto.EventListDTO;
 import com.ashoksm.thiraseela.utils.ImageDownloader;

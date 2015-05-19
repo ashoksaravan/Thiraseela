@@ -1,6 +1,8 @@
 package com.ashoksm.thiraseela.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
-import com.ashoksm.thiraseela.utils.DownloadImageTask;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 import com.ashoksm.thiraseela.utils.SimpleGestureFilter;
 
 import java.text.DateFormat;
@@ -44,6 +46,7 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
     private LinearLayout emailLayout;
     private LinearLayout webLayout;
     private ImageView performerImg;
+    private Bitmap placeHolderImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,8 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
         setSupportActionBar(toolbar);
+        placeHolderImage = BitmapFactory.decodeResource(getResources(),
+                R.mipmap.ic_launcher);
 
         String name = getIntent().getStringExtra(EventsListActivity.EXTRA_EVENT_NAME);
         i = Integer.parseInt(name);
@@ -142,7 +147,7 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
         venue.setText(EventsListActivity.EVENT_LIST_DTOS.get(i).getVenue());
         city.setText(EventsListActivity.EVENT_LIST_DTOS.get(i).getDistrict());
         DateFormat df = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
-        if(!EventsListActivity.EVENT_LIST_DTOS.get(i).getStart().equals(EventsListActivity.EVENT_LIST_DTOS.get(i).getEnd())) {
+        if (!EventsListActivity.EVENT_LIST_DTOS.get(i).getStart().equals(EventsListActivity.EVENT_LIST_DTOS.get(i).getEnd())) {
             date.setText("Date : " + df.format(EventsListActivity.EVENT_LIST_DTOS.get(i).getStart()) + " - " + df.format(EventsListActivity.EVENT_LIST_DTOS.get(i).getEnd()));
         } else {
             date.setText("On : " + df.format(EventsListActivity.EVENT_LIST_DTOS.get(i).getStart()));
@@ -170,7 +175,9 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
             webLayout.setVisibility(View.GONE);
         }
         if (EventsListActivity.EVENT_LIST_DTOS.get(i).getLogo() != null && EventsListActivity.EVENT_LIST_DTOS.get(i).getLogo().trim().length() > 0) {
-            new DownloadImageTask(performerImg).execute("http://thiraseela.com/" + EventsListActivity.EVENT_LIST_DTOS.get(i).getLogo());
+            String url = "http://thiraseela.com/" + EventsListActivity.EVENT_LIST_DTOS.get(i).getLogo();
+            ImageDownloader imageDownloader = new ImageDownloader();
+            imageDownloader.download(url, performerImg, getResources(), placeHolderImage);
         }
     }
 }

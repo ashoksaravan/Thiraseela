@@ -1,25 +1,27 @@
 package com.ashoksm.thiraseela.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.dto.TroupeDetailDTO;
-import com.ashoksm.thiraseela.utils.DownloadImageTask;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 import com.ashoksm.thiraseela.utils.SimpleGestureFilter;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,24 +32,16 @@ import java.io.IOException;
 public class TroupesDetailActivity extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener {
 
     private SimpleGestureFilter detector;
-
     private int i;
-
     private TextView programName;
-
     private TextView address;
-
     private TextView mobile;
-
     private TextView phone;
-
     private TextView email;
-
     private TextView web;
-
     private TextView about;
-
     private ImageView performerImage;
+    private Bitmap placeHolderImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +51,8 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
         setSupportActionBar(toolbar);
+        placeHolderImage = BitmapFactory.decodeResource(getResources(),
+                R.mipmap.ic_launcher);
 
         String troupeId = getIntent().getStringExtra(TroupesListActivity.EXTRA_TROUPE_ID);
         i = Integer.valueOf(troupeId);
@@ -169,8 +165,10 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getName());
                 }
-                new DownloadImageTask(performerImage).execute("http://thiraseela.com/gleimo/Troupes/images/truopes" + TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg");
-                // HIDE THE SPINNER WHILE LOADING FEEDS
+                String url = "http://thiraseela.com/gleimo/Troupes/images/truopes" + TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
+                ImageDownloader imageDownloader = new ImageDownloader();
+                imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);
                 contentLayout.setVisibility(View.VISIBLE);
             }

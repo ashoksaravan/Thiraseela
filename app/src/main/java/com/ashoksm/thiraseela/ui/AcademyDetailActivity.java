@@ -1,6 +1,8 @@
 package com.ashoksm.thiraseela.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,7 +21,7 @@ import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.dto.AcademyDetailDTO;
-import com.ashoksm.thiraseela.utils.DownloadImageTask;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 import com.ashoksm.thiraseela.utils.SimpleGestureFilter;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +41,7 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
     private TextView phone;
     private TextView email;
     private TextView web;
+    private Bitmap placeHolderImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,9 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
         setSupportActionBar(toolbar);
+        placeHolderImage = BitmapFactory.decodeResource(getResources(),
+                R.mipmap.ic_launcher);
+
 
         String name = getIntent().getStringExtra(AcademyListActivity.EXTRA_ACADEMY_ID);
         i = Integer.valueOf(name);
@@ -178,7 +184,9 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
                 } else {
                     web.setVisibility(View.GONE);
                 }
-                new DownloadImageTask(performerImage).execute("http://thiraseela.com/gleimo/Academy/images/academy" + AcademyListActivity.ACADEMY_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg");
+                ImageDownloader imageDownloader = new ImageDownloader();
+                String url = "http://thiraseela.com/gleimo/Academy/images/academy" + AcademyListActivity.ACADEMY_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
+                imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);
                 contentLayout.setVisibility(View.VISIBLE);
