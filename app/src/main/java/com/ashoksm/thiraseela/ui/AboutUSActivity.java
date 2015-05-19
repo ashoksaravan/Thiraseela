@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.ui;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 
 

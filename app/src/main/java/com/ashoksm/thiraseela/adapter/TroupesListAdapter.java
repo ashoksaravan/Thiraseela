@@ -1,5 +1,8 @@
 package com.ashoksm.thiraseela.adapter;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +12,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ashoksm.thiraseela.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.dto.TroupeListDTO;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -21,6 +24,9 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
 
     private List<TroupeListDTO> troupeListDTOs;
     private List<TroupeListDTO> filteredTroupeListDTOs = new ArrayList<>();
+    private Context context;
+    private Bitmap placeHolderImage;
+    private ImageDownloader imageDownloader;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -43,9 +49,13 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn) {
+    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn, Context contextIn) {
         this.troupeListDTOs = troupeListDTOsIn;
         filteredTroupeListDTOs.addAll(troupeListDTOsIn);
+        context = contextIn;
+        placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
+                R.mipmap.ic_launcher);
+        imageDownloader = new ImageDownloader();
     }
 
     // Create new views (invoked by the layout manager)
@@ -65,8 +75,8 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
         holder.txtHeader.setText(troupeListDTO.getName());
         holder.txtFooter.setText(troupeListDTO.getPrgrmName());
         holder.location.setText(troupeListDTO.getPlace() + ", " + troupeListDTO.getCity());
-        holder.imageView.setImageResource(R.mipmap.ic_launcher);
-        new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/gleimo/Troupes/images/truopes" + troupeListDTO.getId() + "/thumb/logo.jpeg");
+        String url = "http://thiraseela.com/gleimo/Troupes/images/truopes" + troupeListDTO.getId() + "/thumb/logo.jpeg";
+        imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

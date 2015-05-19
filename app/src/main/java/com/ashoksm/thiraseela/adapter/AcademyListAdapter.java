@@ -1,5 +1,8 @@
 package com.ashoksm.thiraseela.adapter;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +12,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ashoksm.thiraseela.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.dto.AcademyListDTO;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,8 +23,10 @@ import java.util.List;
 public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.ViewHolder> implements Filterable {
 
     private List<AcademyListDTO> academyListDTOs;
-
     private List<AcademyListDTO> filteredAcademyListDTOs = new ArrayList<>();
+    private Context context;
+    private Bitmap placeHolderImage;
+    private ImageDownloader imageDownloader;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -42,9 +47,13 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public AcademyListAdapter(List<AcademyListDTO> academyListDTOsIn) {
+    public AcademyListAdapter(List<AcademyListDTO> academyListDTOsIn, Context contextIn) {
         this.academyListDTOs = academyListDTOsIn;
         filteredAcademyListDTOs.addAll(academyListDTOsIn);
+        context = contextIn;
+        placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
+                R.mipmap.ic_launcher);
+        imageDownloader = new ImageDownloader();
     }
 
     // Create new views (invoked by the layout manager)
@@ -64,8 +73,8 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         final AcademyListDTO academyListDTO = filteredAcademyListDTOs.get(position);
         holder.txtHeader.setText(academyListDTO.getName());
         holder.txtFooter.setText(academyListDTO.getPlace() + ", " + academyListDTO.getCity());
-        holder.imageView.setImageResource(R.mipmap.ic_launcher);
-        new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/gleimo/Academy/images/academy" + academyListDTO.getId() + "/thumb/logo.jpeg");
+        String url = "http://thiraseela.com/gleimo/Academy/images/academy" + academyListDTO.getId() + "/thumb/logo.jpeg";
+        imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

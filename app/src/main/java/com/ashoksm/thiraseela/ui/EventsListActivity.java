@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.ui;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,8 +15,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.ashoksm.thiraseela.adapter.TroupesListAdapter;
-import com.ashoksm.thiraseela.dto.TroupeListDTO;
+import com.ashoksm.thiraseela.R;
+import com.ashoksm.thiraseela.adapter.EventsListAdapter;
+import com.ashoksm.thiraseela.dto.EventListDTO;
+import com.ashoksm.thiraseela.utils.RecyclerItemClickListener;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -26,22 +28,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TroupesListActivity extends AppCompatActivity {
+public class EventsListActivity extends AppCompatActivity {
 
-    public static final String EXTRA_TROUPE_ID = "EXTRA_TROUPE_ID";
-    private TroupesListAdapter adapter = null;
-    public static final List<TroupeListDTO> TROUPE_LIST_DTOS = new ArrayList<>();
+    public static final String EXTRA_EVENT_NAME = "EXTRA_EVENT_NAME";
+
+    public static final List<EventListDTO> EVENT_LIST_DTOS = new ArrayList<>();
+
+    private EventsListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_troupes_list);
+        setContentView(R.layout.activity_events_list);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
         setSupportActionBar(toolbar);
 
         EditText searchText = (EditText) findViewById(R.id.search_bar);
-        final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.troupes_list_view);
+        final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.events_list_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -65,17 +69,17 @@ public class TroupesListActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                if (TROUPE_LIST_DTOS.size() == 0) {
-                    TROUPE_LIST_DTOS.clear();
+                if (EVENT_LIST_DTOS.size() == 0) {
+                    EVENT_LIST_DTOS.clear();
                     ObjectMapper mapper = new ObjectMapper();
-                    String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/troupelistservice.php");
+                    String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/eventservice.php");
                     Log.d("response", response);
                     try {
-                        List<TroupeListDTO> temp = mapper.readValue(response,
-                                TypeFactory.defaultInstance().constructCollectionType(List.class, TroupeListDTO.class));
-                        TROUPE_LIST_DTOS.addAll(temp);
+                        List<EventListDTO> temp = mapper.readValue(response,
+                                TypeFactory.defaultInstance().constructCollectionType(List.class, EventListDTO.class));
+                        EVENT_LIST_DTOS.addAll(temp);
                     } catch (IOException e) {
-                        Log.e("TroupesListActivity", e.getLocalizedMessage());
+                        Log.e("ArtistListActivity", e.getLocalizedMessage());
                     }
                 }
                 return null;
@@ -83,7 +87,7 @@ public class TroupesListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new TroupesListAdapter(TROUPE_LIST_DTOS);
+                adapter = new EventsListAdapter(EVENT_LIST_DTOS, EventsListActivity.this);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);
@@ -95,11 +99,11 @@ public class TroupesListActivity extends AppCompatActivity {
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(getApplicationContext(), TroupesDetailActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), EventsDetailActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        TroupeListDTO troupeListDTO = adapter.getFilteredTroupeListDTOs().get(position);
-                        int i = TROUPE_LIST_DTOS.indexOf(troupeListDTO);
-                        intent.putExtra(EXTRA_TROUPE_ID, String.valueOf(i));
+                        EventListDTO eventListDTO = adapter.getFilteredArtistListDTOs().get(position);
+                        int i = EVENT_LIST_DTOS.indexOf(eventListDTO);
+                        intent.putExtra(EXTRA_EVENT_NAME, String.valueOf(i));
                         getApplicationContext().startActivity(intent);
                     }
                 })

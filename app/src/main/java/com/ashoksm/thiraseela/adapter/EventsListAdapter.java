@@ -1,5 +1,8 @@
 package com.ashoksm.thiraseela.adapter;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +12,10 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ashoksm.thiraseela.DownloadImageTask;
+import com.ashoksm.thiraseela.utils.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.dto.EventListDTO;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,6 +28,9 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
 
     private List<EventListDTO> eventListDTOs;
     private List<EventListDTO> filteredArtistListDTOs = new ArrayList<>();
+    private Context context;
+    private Bitmap placeHolderImage;
+    private ImageDownloader imageDownloader;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -50,9 +57,13 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public EventsListAdapter(List<EventListDTO> eventListDTOsIn) {
+    public EventsListAdapter(List<EventListDTO> eventListDTOsIn, Context contextIn) {
         eventListDTOs = eventListDTOsIn;
         filteredArtistListDTOs.addAll(eventListDTOsIn);
+        context = contextIn;
+        placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
+                R.mipmap.ic_launcher);
+        imageDownloader = new ImageDownloader();
     }
 
     // Create new views (invoked by the layout manager)
@@ -73,7 +84,6 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         holder.txtHeader.setText(eventListDTO.getName());
         holder.txtFooter.setText(eventListDTO.getEventType() + " | " + eventListDTO.getArtistName());
         holder.location.setText(eventListDTO.getVenue());
-        holder.imageView.setImageResource(R.mipmap.ic_launcher);
         DateFormat df = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
         if(!eventListDTO.getStart().equals(eventListDTO.getEnd())) {
             holder.date.setText("Date : " + df.format(eventListDTO.getStart()) + " - " + df.format(eventListDTO.getEnd()));
@@ -82,7 +92,8 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         }
         holder.time.setText("Time : " + eventListDTO.getFromTime() + " - " + eventListDTO.getToTime());
         if(eventListDTO.getTsimg() != null && eventListDTO.getTsimg().trim().length() > 0) {
-            new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/" + eventListDTO.getTsimg());
+            String url = "http://thiraseela.com/" + eventListDTO.getTsimg();
+            imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
         }
     }
 

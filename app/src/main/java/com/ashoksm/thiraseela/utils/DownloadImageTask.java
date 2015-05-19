@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,9 +6,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.ashoksm.thiraseela.R;
+
 import java.io.InputStream;
 
 /**
+ * This Class is used to download image async.
  * Created by Sheela on 6/3/2015.
  */
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

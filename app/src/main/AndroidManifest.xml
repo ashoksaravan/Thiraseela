@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ashoksm.thiraseela" >
+    package="com.ashoksm.thiraseela">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -8,10 +8,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,81 +19,84 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ArtistListActivity"
+            android:name=".ui.ArtistListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_artist_list"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:parentActivityName=".ui.MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
-            android:name=".TroupesListActivity"
+            android:name=".ui.TroupesListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_troupes_list"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:parentActivityName=".ui.MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashoksm.thiraseela.MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
-            android:name=".AcademyListActivity"
+            android:name=".ui.AcademyListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_academy_list"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:parentActivityName=".ui.MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashoksm.thiraseela.MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
-            android:name=".EventsListActivity"
+            android:name=".ui.EventsListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_events_list"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:parentActivityName=".ui.MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashoksm.thiraseela.MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
-            android:name=".ArtistDetailActivity"
+            android:name=".ui.ArtistDetailActivity"
             android:label="@string/title_activity_artist_detail"
-            android:parentActivityName=".ArtistListActivity" >
+            android:parentActivityName=".ui.ArtistListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashoksm.thiraseela.ArtistListActivity" />
+                android:value=".ui.ArtistListActivity" />
         </activity>
         <activity
-            android:name=".TroupesDetailActivity"
+            android:name=".ui.TroupesDetailActivity"
             android:label="@string/title_activity_troupes_detail"
-            android:parentActivityName=".TroupesListActivity" >
+            android:parentActivityName=".ui.TroupesListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashoksm.thiraseela.TroupesListActivity" />
+                android:value=".ui.TroupesListActivity" />
         </activity>
         <activity
-            android:name=".AcademyDetailActivity"
+            android:name=".ui.AcademyDetailActivity"
             android:label="@string/title_activity_academy_detail"
-            android:parentActivityName=".AcademyListActivity" >
+            android:parentActivityName=".ui.AcademyListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashoksm.thiraseela.AcademyListActivity" />
+                android:value=".ui.AcademyListActivity" />
         </activity>
         <activity
-            android:name=".EventsDetailActivity"
+            android:name=".ui.EventsDetailActivity"
             android:label="@string/title_activity_events_detail"
-            android:parentActivityName=".EventsListActivity" >
+            android:parentActivityName=".ui.EventsListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashoksm.thiraseela.EventsListActivity" />
+                android:value=".ui.EventsListActivity" />
         </activity>
         <activity
-            android:name=".AboutUSActivity"
+            android:name=".ui.AboutUSActivity"
             android:label="@string/about_us"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ashoksm.thiraseela.MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
     </application>
 

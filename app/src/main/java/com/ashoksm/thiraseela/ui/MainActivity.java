@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+
+import com.ashoksm.thiraseela.R;
 
 
 public class MainActivity extends AppCompatActivity {

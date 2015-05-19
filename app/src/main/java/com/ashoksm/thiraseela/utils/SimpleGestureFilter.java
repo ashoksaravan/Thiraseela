@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.utils;
 
 import android.app.Activity;
 import android.view.GestureDetector;
@@ -158,7 +158,7 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
         return false;
     }
 
-    static interface SimpleGestureListener{
+    public interface SimpleGestureListener{
         void onSwipe(int direction);
         void onDoubleTap();
     }

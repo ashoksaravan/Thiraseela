@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.utils;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

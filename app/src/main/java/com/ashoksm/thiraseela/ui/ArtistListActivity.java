@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.ui;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,8 +15,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.adapter.ArtistListAdapter;
 import com.ashoksm.thiraseela.dto.ArtistListDTO;
+import com.ashoksm.thiraseela.utils.RecyclerItemClickListener;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -84,7 +86,7 @@ public class ArtistListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new ArtistListAdapter(ARTIST_LIST_VOS);
+                adapter = new ArtistListAdapter(ARTIST_LIST_VOS, ArtistListActivity.this);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);

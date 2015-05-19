@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ashoksm.thiraseela.R;
+import com.ashoksm.thiraseela.utils.DownloadImageTask;
+import com.ashoksm.thiraseela.utils.SimpleGestureFilter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

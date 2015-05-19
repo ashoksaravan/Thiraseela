@@ -1,5 +1,8 @@
 package com.ashoksm.thiraseela.adapter;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +12,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ashoksm.thiraseela.DownloadImageTask;
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.dto.ArtistListDTO;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,8 +23,10 @@ import java.util.List;
 public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.ViewHolder> implements Filterable {
 
     private List<ArtistListDTO> artistListDTOs;
-
     private List<ArtistListDTO> filteredArtistListDTOs = new ArrayList<>();
+    private Bitmap placeHolderImage;
+    private ImageDownloader imageDownloader;
+    private Context context;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -42,9 +47,13 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ArtistListAdapter(List<ArtistListDTO> artistListVOsIn) {
+    public ArtistListAdapter(List<ArtistListDTO> artistListVOsIn, Context contextIn) {
         artistListDTOs = artistListVOsIn;
         filteredArtistListDTOs.addAll(artistListVOsIn);
+        placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
+                R.mipmap.ic_launcher);
+        imageDownloader = new ImageDownloader();
+        context = contextIn;
     }
 
     // Create new views (invoked by the layout manager)
@@ -64,9 +73,8 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         final ArtistListDTO artistListDTO = filteredArtistListDTOs.get(position);
         holder.txtHeader.setText(artistListDTO.getName());
         holder.txtFooter.setText(artistListDTO.getTitle());
-        holder.imageView.setImageResource(R.mipmap.ic_launcher);
-        new DownloadImageTask(holder.imageView).execute("http://thiraseela.com/gleimo/performers/images/perfomr" + artistListDTO.getId() + "/thumb/Perfmr_img.jpeg");
-        //setAnimation(holder.view, position);
+        String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + artistListDTO.getId() + "/thumb/Perfmr_img.jpeg";
+        imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

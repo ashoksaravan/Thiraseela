@@ -1,4 +1,4 @@
-package com.ashoksm.thiraseela;
+package com.ashoksm.thiraseela.ui;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,26 +17,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.ashoksm.thiraseela.dto.ArtistDetailDTO;
+import com.ashoksm.thiraseela.R;
+import com.ashoksm.thiraseela.dto.TroupeDetailDTO;
+import com.ashoksm.thiraseela.utils.DownloadImageTask;
+import com.ashoksm.thiraseela.utils.SimpleGestureFilter;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
 
-public class ArtistDetailActivity extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener {
+public class TroupesDetailActivity extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener {
 
     private SimpleGestureFilter detector;
 
     private int i;
 
-    private TextView about;
-
-    private ImageView performerImage;
-
-    private TextView designation;
-
-    private TextView location;
+    private TextView programName;
 
     private TextView address;
 
@@ -48,27 +45,35 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
 
     private TextView web;
 
+    private TextView about;
+
+    private ImageView performerImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_artist_detail);
+        setContentView(R.layout.activity_troupes_detail);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
         setSupportActionBar(toolbar);
 
-        String name = getIntent().getStringExtra(ArtistListActivity.EXTRA_PERFORMER_NAME);
-        i = Integer.valueOf(name);
-        about = (TextView) findViewById(R.id.performer_profile);
-        performerImage = (ImageView) findViewById(R.id.performer_img);
-        designation = (TextView) findViewById(R.id.designation);
-        location = (TextView) findViewById(R.id.location);
+        String troupeId = getIntent().getStringExtra(TroupesListActivity.EXTRA_TROUPE_ID);
+        i = Integer.valueOf(troupeId);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getName());
+        }
+
+        programName = (TextView) findViewById(R.id.programName);
         address = (TextView) findViewById(R.id.address);
         mobile = (TextView) findViewById(R.id.mobile);
         phone = (TextView) findViewById(R.id.phone);
         email = (TextView) findViewById(R.id.email);
         web = (TextView) findViewById(R.id.web);
+        about = (TextView) findViewById(R.id.performer_profile);
+        performerImage = (ImageView) findViewById(R.id.performer_img);
         loadDetails();
+
         // Detect touched area
         detector = new SimpleGestureFilter(this, this);
     }
@@ -92,7 +97,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
                 }
                 break;
             case SimpleGestureFilter.SWIPE_LEFT:
-                if (i != ArtistListActivity.ARTIST_LIST_VOS.size() - 1) {
+                if (i != TroupesListActivity.TROUPE_LIST_DTOS.size() - 1) {
                     i++;
                     loadDetails();
                 }
@@ -100,17 +105,18 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
         }
     }
 
+    @Override
+    public void onDoubleTap() {
+    }
+
     private void loadDetails() {
         new AsyncTask<Void, Void, Void>() {
-            ArtistDetailDTO artistDetailDTO = new ArtistDetailDTO();
+            TroupeDetailDTO troupeDetailDTO = new TroupeDetailDTO();
             LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
             ScrollView contentLayout = (ScrollView) findViewById(R.id.contentLayout);
 
             @Override
             protected void onPreExecute() {
-                if (getSupportActionBar() != null && ArtistListActivity.ARTIST_LIST_VOS.get(i) != null) {
-                    getSupportActionBar().setTitle(ArtistListActivity.ARTIST_LIST_VOS.get(i).getName());
-                }
                 // SHOW THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.VISIBLE);
                 contentLayout.setVisibility(View.GONE);
@@ -119,49 +125,51 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
             @Override
             protected Void doInBackground(Void... params) {
                 ObjectMapper mapper = new ObjectMapper();
-                String response = WSClient.execute(String.valueOf(ArtistListActivity.ARTIST_LIST_VOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/performerdetailservice.php");
+                String response = WSClient.execute(String.valueOf(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/troupedetailservice.php");
                 Log.d("response", response);
 
                 try {
-                    artistDetailDTO = mapper.readValue(response, ArtistDetailDTO.class);
+                    troupeDetailDTO = mapper.readValue(response, TroupeDetailDTO.class);
                 } catch (IOException e) {
-                    Log.e("ArtistDetailActivity", e.getLocalizedMessage());
+                    Log.e("TroupesDetailActivity", e.getLocalizedMessage());
                 }
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                about.setText(artistDetailDTO.getAbout());
+                about.setText(troupeDetailDTO.getAbout());
+                programName.setText(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getPrgrmName());
                 performerImage.setImageResource(R.mipmap.ic_launcher);
-                designation.setText(ArtistListActivity.ARTIST_LIST_VOS.get(i).getTitle());
-                location.setText(artistDetailDTO.getPlace() + ", " + artistDetailDTO.getCity());
-                if (artistDetailDTO.getAddress() != null && artistDetailDTO.getAddress().trim().length() > 0) {
-                    address.setText(artistDetailDTO.getAddress());
+                if (troupeDetailDTO.getAddress() != null && troupeDetailDTO.getAddress().trim().length() > 0) {
+                    address.setText(troupeDetailDTO.getAddress());
                 } else {
                     address.setVisibility(View.GONE);
                 }
-                if (artistDetailDTO.getMobile() != null && artistDetailDTO.getMobile().trim().length() > 0) {
-                    mobile.setText(artistDetailDTO.getMobile());
+                if (troupeDetailDTO.getMobile() != null && troupeDetailDTO.getMobile().trim().length() > 0) {
+                    mobile.setText(troupeDetailDTO.getMobile());
                 } else {
                     mobile.setVisibility(View.GONE);
                 }
-                if (artistDetailDTO.getPhone() != null && artistDetailDTO.getPhone().trim().length() > 0) {
-                    phone.setText(artistDetailDTO.getPhone());
+                if (troupeDetailDTO.getPhone() != null && troupeDetailDTO.getPhone().trim().length() > 0) {
+                    phone.setText(troupeDetailDTO.getPhone());
                 } else {
                     phone.setVisibility(View.GONE);
                 }
-                if (artistDetailDTO.getEmail() != null && artistDetailDTO.getEmail().trim().length() > 0) {
-                    email.setText(artistDetailDTO.getEmail());
+                if (troupeDetailDTO.getEmail() != null && troupeDetailDTO.getEmail().trim().length() > 0) {
+                    email.setText(troupeDetailDTO.getEmail());
                 } else {
                     email.setVisibility(View.GONE);
                 }
-                if (artistDetailDTO.getWebsite() != null && artistDetailDTO.getWebsite().trim().length() > 0) {
-                    web.setText(artistDetailDTO.getWebsite());
+                if (troupeDetailDTO.getWebsite() != null && troupeDetailDTO.getWebsite().trim().length() > 0) {
+                    web.setText(troupeDetailDTO.getWebsite());
                 } else {
                     web.setVisibility(View.GONE);
                 }
-                new DownloadImageTask(performerImage).execute("http://thiraseela.com/gleimo/performers/images/perfomr" + ArtistListActivity.ARTIST_LIST_VOS.get(i).getId() + "/Perfmr_img.jpeg");
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getName());
+                }
+                new DownloadImageTask(performerImage).execute("http://thiraseela.com/gleimo/Troupes/images/truopes" + TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg");
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);
                 contentLayout.setVisibility(View.VISIBLE);
@@ -169,11 +177,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
         }.execute();
     }
 
-    @Override
-    public void onDoubleTap() {
-    }
-
-@Override
+ @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
