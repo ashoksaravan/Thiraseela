@@ -27,6 +27,8 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     private Bitmap placeHolderImage;
     private ImageDownloader imageDownloader;
     private Context context;
+    private static RecyclerView recyclerView;
+    private static TextView emptyView;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -47,13 +49,15 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ArtistListAdapter(List<ArtistListDTO> artistListVOsIn, Context contextIn) {
+    public ArtistListAdapter(List<ArtistListDTO> artistListVOsIn, Context contextIn, RecyclerView recyclerViewIn, TextView emptyViewIn) {
         artistListDTOs = artistListVOsIn;
         filteredArtistListDTOs.addAll(artistListVOsIn);
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
         imageDownloader = new ImageDownloader();
         context = contextIn;
+        recyclerView = recyclerViewIn;
+        emptyView = emptyViewIn;
     }
 
     // Create new views (invoked by the layout manager)
@@ -128,6 +132,13 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.filteredArtistListDTOs.clear();
             adapter.filteredArtistListDTOs.addAll((ArrayList<ArtistListDTO>) results.values);
+            if(adapter.getFilteredArtistListDTOs().size() == 0) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+            }
             adapter.notifyDataSetChanged();
         }
     }
@@ -135,5 +146,4 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
     public List<ArtistListDTO> getFilteredArtistListDTOs() {
         return filteredArtistListDTOs;
     }
-
 }

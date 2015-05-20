@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.adapter.ArtistListAdapter;
@@ -30,9 +31,7 @@ import java.util.List;
 public class ArtistListActivity extends AppCompatActivity {
 
     public static final String EXTRA_PERFORMER_NAME = "EXTRA_PERFORMER_NAME";
-
     public static final List<ArtistListDTO> ARTIST_LIST_VOS = new ArrayList<>();
-
     private ArtistListAdapter adapter = null;
 
     @Override
@@ -45,6 +44,7 @@ public class ArtistListActivity extends AppCompatActivity {
 
         EditText searchText = (EditText) findViewById(R.id.search_bar);
         final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.artist_list_view);
+        final TextView emptyView = (TextView) findViewById(R.id.empty_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -86,7 +86,7 @@ public class ArtistListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new ArtistListAdapter(ARTIST_LIST_VOS, ArtistListActivity.this);
+                adapter = new ArtistListAdapter(ARTIST_LIST_VOS, ArtistListActivity.this, mRecyclerView, emptyView);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);

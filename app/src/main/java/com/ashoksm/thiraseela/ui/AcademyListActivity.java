@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.adapter.AcademyListAdapter;
@@ -31,9 +32,7 @@ import java.util.List;
 public class AcademyListActivity extends AppCompatActivity {
 
     public static final String EXTRA_ACADEMY_ID = "EXTRA_ACADEMY_ID";
-
     public static final List<AcademyListDTO> ACADEMY_LIST_DTOS = new ArrayList<>();
-
     private AcademyListAdapter adapter = null;
 
     @Override
@@ -46,6 +45,7 @@ public class AcademyListActivity extends AppCompatActivity {
 
         EditText searchText = (EditText) findViewById(R.id.search_bar);
         final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.academy_list_view);
+        final TextView emptyView = (TextView) findViewById(R.id.empty_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -87,7 +87,7 @@ public class AcademyListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new AcademyListAdapter(ACADEMY_LIST_DTOS, AcademyListActivity.this);
+                adapter = new AcademyListAdapter(ACADEMY_LIST_DTOS, AcademyListActivity.this, mRecyclerView, emptyView);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);

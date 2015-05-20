@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.adapter.TroupesListAdapter;
@@ -44,6 +45,7 @@ public class TroupesListActivity extends AppCompatActivity {
 
         EditText searchText = (EditText) findViewById(R.id.search_bar);
         final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.troupes_list_view);
+        final TextView emptyView = (TextView) findViewById(R.id.empty_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -85,7 +87,7 @@ public class TroupesListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new TroupesListAdapter(TROUPE_LIST_DTOS, TroupesListActivity.this);
+                adapter = new TroupesListAdapter(TROUPE_LIST_DTOS, TroupesListActivity.this, mRecyclerView, emptyView);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.adapter.EventsListAdapter;
@@ -31,9 +32,7 @@ import java.util.List;
 public class EventsListActivity extends AppCompatActivity {
 
     public static final String EXTRA_EVENT_NAME = "EXTRA_EVENT_NAME";
-
     public static final List<EventListDTO> EVENT_LIST_DTOS = new ArrayList<>();
-
     private EventsListAdapter adapter;
 
     @Override
@@ -46,6 +45,7 @@ public class EventsListActivity extends AppCompatActivity {
 
         EditText searchText = (EditText) findViewById(R.id.search_bar);
         final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.events_list_view);
+        final TextView emptyView = (TextView) findViewById(R.id.empty_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -73,7 +73,6 @@ public class EventsListActivity extends AppCompatActivity {
                     EVENT_LIST_DTOS.clear();
                     ObjectMapper mapper = new ObjectMapper();
                     String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/eventservice.php");
-                    Log.d("response", response);
                     try {
                         List<EventListDTO> temp = mapper.readValue(response,
                                 TypeFactory.defaultInstance().constructCollectionType(List.class, EventListDTO.class));
@@ -87,7 +86,7 @@ public class EventsListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                adapter = new EventsListAdapter(EVENT_LIST_DTOS, EventsListActivity.this);
+                adapter = new EventsListAdapter(EVENT_LIST_DTOS, EventsListActivity.this, mRecyclerView, emptyView);
                 mRecyclerView.setAdapter(adapter);
                 // HIDE THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.GONE);

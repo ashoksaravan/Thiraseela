@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
@@ -28,7 +28,7 @@ public class AboutUSActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
 
             LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
-            CardView contentLayout = (CardView) findViewById(R.id.contentLayout);
+            ScrollView contentLayout = (ScrollView) findViewById(R.id.contentLayout);
             String response = "";
 
             @Override
@@ -40,8 +40,7 @@ public class AboutUSActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/aboutusservice.php");
-                Log.d("response", response);
+                response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/aboutusservice.php");
                 return null;
             }
 

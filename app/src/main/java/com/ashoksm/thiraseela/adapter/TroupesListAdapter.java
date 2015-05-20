@@ -27,6 +27,8 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
     private Context context;
     private Bitmap placeHolderImage;
     private ImageDownloader imageDownloader;
+    private static RecyclerView recyclerView;
+    private static TextView emptyView;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -49,13 +51,15 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn, Context contextIn) {
+    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn, Context contextIn, RecyclerView recyclerViewIn, TextView emptyViewIn) {
         this.troupeListDTOs = troupeListDTOsIn;
         filteredTroupeListDTOs.addAll(troupeListDTOsIn);
         context = contextIn;
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
         imageDownloader = new ImageDownloader();
+        recyclerView = recyclerViewIn;
+        emptyView = emptyViewIn;
     }
 
     // Create new views (invoked by the layout manager)
@@ -130,6 +134,13 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.filteredTroupeListDTOs.clear();
             adapter.filteredTroupeListDTOs.addAll((ArrayList<TroupeListDTO>) results.values);
+            if(adapter.filteredTroupeListDTOs.size() == 0) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+            }
             adapter.notifyDataSetChanged();
         }
     }

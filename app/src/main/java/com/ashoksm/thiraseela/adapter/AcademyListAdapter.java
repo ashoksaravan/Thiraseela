@@ -27,6 +27,8 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
     private Context context;
     private Bitmap placeHolderImage;
     private ImageDownloader imageDownloader;
+    private static RecyclerView recyclerView;
+    private static TextView emptyView;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -47,13 +49,15 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public AcademyListAdapter(List<AcademyListDTO> academyListDTOsIn, Context contextIn) {
+    public AcademyListAdapter(List<AcademyListDTO> academyListDTOsIn, Context contextIn, RecyclerView recyclerViewIn, TextView emptyViewIn) {
         this.academyListDTOs = academyListDTOsIn;
         filteredAcademyListDTOs.addAll(academyListDTOsIn);
         context = contextIn;
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
         imageDownloader = new ImageDownloader();
+        recyclerView = recyclerViewIn;
+        emptyView = emptyViewIn;
     }
 
     // Create new views (invoked by the layout manager)
@@ -128,6 +132,13 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.filteredAcademyListDTOs.clear();
             adapter.filteredAcademyListDTOs.addAll((ArrayList<AcademyListDTO>) results.values);
+            if(adapter.filteredAcademyListDTOs.size() == 0) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+            }
             adapter.notifyDataSetChanged();
         }
     }

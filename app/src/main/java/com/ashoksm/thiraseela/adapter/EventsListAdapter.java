@@ -30,6 +30,8 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
     private Context context;
     private Bitmap placeHolderImage;
     private ImageDownloader imageDownloader;
+    private static RecyclerView recyclerView;
+    private static TextView emptyView;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -56,13 +58,15 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public EventsListAdapter(List<EventListDTO> eventListDTOsIn, Context contextIn) {
+    public EventsListAdapter(List<EventListDTO> eventListDTOsIn, Context contextIn, RecyclerView recyclerViewIn, TextView emptyViewIn) {
         eventListDTOs = eventListDTOsIn;
         filteredArtistListDTOs.addAll(eventListDTOsIn);
         context = contextIn;
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
         imageDownloader = new ImageDownloader();
+        recyclerView = recyclerViewIn;
+        emptyView = emptyViewIn;
     }
 
     // Create new views (invoked by the layout manager)
@@ -147,6 +151,13 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.filteredArtistListDTOs.clear();
             adapter.filteredArtistListDTOs.addAll((ArrayList<EventListDTO>) results.values);
+            if(adapter.filteredArtistListDTOs.size() == 0) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+            }
             adapter.notifyDataSetChanged();
         }
     }
