@@ -3,15 +3,18 @@ package com.ashoksm.thiraseela.ui;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.wsclient.WSClient;
+
+import java.io.IOException;
 
 
 public class AboutUSActivity extends AppCompatActivity {
@@ -21,37 +24,63 @@ public class AboutUSActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
         setSupportActionBar(toolbar);
         final TextView about = (TextView) findViewById(R.id.about_us);
 
+        load(about);
+
+        Button retryButton = (Button) findViewById(R.id.retryButton);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                load(about);
+            }
+        });
+    }
+
+    private void load(final TextView about) {
         new AsyncTask<Void, Void, Void>() {
 
             LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
             ScrollView contentLayout = (ScrollView) findViewById(R.id.contentLayout);
+            LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
             String response = "";
+            boolean networkAvailable = true;
 
             @Override
             protected void onPreExecute() {
                 // SHOW THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.VISIBLE);
                 contentLayout.setVisibility(View.GONE);
+                timeoutLayout.setVisibility(View.GONE);
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/aboutusservice.php");
+                try {
+                    response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/aboutusservice.php");
+                } catch (IOException e) {
+                    Log.e("AboutUSActivity", e.getLocalizedMessage());
+                    networkAvailable = false;
+                }
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void result) {
-                about.setText(response);
-                // HIDE THE SPINNER WHILE LOADING FEEDS
-                progressLayout.setVisibility(View.GONE);
-                contentLayout.setVisibility(View.VISIBLE);
+                if(networkAvailable) {
+                    about.setText(response);
+                    // HIDE THE SPINNER WHILE LOADING FEEDS
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.VISIBLE);
+                    timeoutLayout.setVisibility(View.GONE);
+                } else {
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.GONE);
+                    timeoutLayout.setVisibility(View.VISIBLE);
+                }
             }
         }.execute();
-
     }
 }

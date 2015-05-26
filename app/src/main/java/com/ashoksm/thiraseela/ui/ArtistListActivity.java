@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,18 +34,26 @@ public class ArtistListActivity extends AppCompatActivity {
     public static final String EXTRA_PERFORMER_NAME = "EXTRA_PERFORMER_NAME";
     public static final List<ArtistListDTO> ARTIST_LIST_VOS = new ArrayList<>();
     private ArtistListAdapter adapter = null;
+    private boolean networkAvailable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artist_list);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
         setSupportActionBar(toolbar);
 
         EditText searchText = (EditText) findViewById(R.id.search_bar);
         final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.artist_list_view);
         final TextView emptyView = (TextView) findViewById(R.id.empty_view);
+        Button retryButton = (Button) findViewById(R.id.retryButton);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadDetails(mRecyclerView, emptyView);
+            }
+        });
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -54,45 +63,7 @@ public class ArtistListActivity extends AppCompatActivity {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        new AsyncTask<Void, Void, Void>() {
-
-            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
-            RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
-
-            @Override
-            protected void onPreExecute() {
-                // SHOW THE SPINNER WHILE LOADING FEEDS
-                progressLayout.setVisibility(View.VISIBLE);
-                contentLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                if (ARTIST_LIST_VOS.size() == 0) {
-                    ARTIST_LIST_VOS.clear();
-                    ObjectMapper mapper = new ObjectMapper();
-                    String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/performerlistservice.php");
-                    Log.d("response", response);
-                    try {
-                        List<ArtistListDTO> temp = mapper.readValue(response,
-                                TypeFactory.defaultInstance().constructCollectionType(List.class, ArtistListDTO.class));
-                        ARTIST_LIST_VOS.addAll(temp);
-                    } catch (IOException e) {
-                        Log.e("ArtistListActivity", e.getLocalizedMessage());
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                adapter = new ArtistListAdapter(ARTIST_LIST_VOS, ArtistListActivity.this, mRecyclerView, emptyView);
-                mRecyclerView.setAdapter(adapter);
-                // HIDE THE SPINNER WHILE LOADING FEEDS
-                progressLayout.setVisibility(View.GONE);
-                contentLayout.setVisibility(View.VISIBLE);
-            }
-        }.execute();
+        loadDetails(mRecyclerView, emptyView);
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
@@ -110,17 +81,71 @@ public class ArtistListActivity extends AppCompatActivity {
 
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(adapter != null) {
+                if (adapter != null) {
                     adapter.getFilter().filter(s.toString());
                 }
             }
         });
+    }
+
+    private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
+        new AsyncTask<Void, Void, Void>() {
+            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
+            RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
+            LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
+
+            @Override
+            protected void onPreExecute() {
+                // SHOW THE SPINNER WHILE LOADING FEEDS
+                progressLayout.setVisibility(View.VISIBLE);
+                contentLayout.setVisibility(View.GONE);
+                timeoutLayout.setVisibility(View.GONE);
+                networkAvailable = true;
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                if (ARTIST_LIST_VOS.size() == 0) {
+                    ARTIST_LIST_VOS.clear();
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/performerlistservice.php");
+                        Log.d("response", response);
+                        List<ArtistListDTO> temp = mapper.readValue(response,
+                                TypeFactory.defaultInstance().constructCollectionType(List.class, ArtistListDTO.class));
+                        ARTIST_LIST_VOS.addAll(temp);
+                    } catch (IOException e) {
+                        Log.e("ArtistListActivity", e.getLocalizedMessage());
+                        networkAvailable = false;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                if(networkAvailable) {
+                    adapter = new ArtistListAdapter(ARTIST_LIST_VOS, ArtistListActivity.this, mRecyclerView, emptyView);
+                    mRecyclerView.setAdapter(adapter);
+                    // HIDE THE SPINNER WHILE LOADING FEEDS
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.VISIBLE);
+                    timeoutLayout.setVisibility(View.GONE);
+                } else {
+                    timeoutLayout.setVisibility(View.VISIBLE);
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.GONE);
+                }
+            }
+        }.execute();
     }
 }

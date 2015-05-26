@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,8 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -42,6 +45,9 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
     private TextView about;
     private ImageView performerImage;
     private Bitmap placeHolderImage;
+    private CardView aboutView;
+    private RelativeLayout addressLayout;
+    private boolean networkAvailable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +55,7 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
         setContentView(R.layout.activity_troupes_detail);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
         setSupportActionBar(toolbar);
         placeHolderImage = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_launcher);
@@ -68,7 +74,18 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
         web = (TextView) findViewById(R.id.web);
         about = (TextView) findViewById(R.id.performer_profile);
         performerImage = (ImageView) findViewById(R.id.performer_img);
+        aboutView = (CardView) findViewById(R.id.aboutView);
+        addressLayout = (RelativeLayout) findViewById(R.id.addressLayout);
         loadDetails();
+
+        Button retryButton = (Button) findViewById(R.id.retryButton);
+        retryButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                loadDetails();
+            }
+        });
 
         // Detect touched area
         detector = new SimpleGestureFilter(this, this);
@@ -110,67 +127,87 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
             TroupeDetailDTO troupeDetailDTO = new TroupeDetailDTO();
             LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
             ScrollView contentLayout = (ScrollView) findViewById(R.id.contentLayout);
+            LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
 
             @Override
             protected void onPreExecute() {
                 // SHOW THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.VISIBLE);
                 contentLayout.setVisibility(View.GONE);
+                timeoutLayout.setVisibility(View.GONE);
+                networkAvailable = true;
             }
 
             @Override
             protected Void doInBackground(Void... params) {
                 ObjectMapper mapper = new ObjectMapper();
-                String response = WSClient.execute(String.valueOf(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/troupedetailservice.php");
-                Log.d("response", response);
-
                 try {
+                    String response = WSClient.execute(String.valueOf(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/troupedetailservice.php");
+                    Log.d("response", response);
                     troupeDetailDTO = mapper.readValue(response, TroupeDetailDTO.class);
                 } catch (IOException e) {
                     Log.e("TroupesDetailActivity", e.getLocalizedMessage());
+                    networkAvailable = false;
                 }
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                about.setText(troupeDetailDTO.getAbout());
-                programName.setText(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getPrgrmName());
-                performerImage.setImageResource(R.mipmap.ic_launcher);
-                if (troupeDetailDTO.getAddress() != null && troupeDetailDTO.getAddress().trim().length() > 0) {
-                    address.setText(troupeDetailDTO.getAddress());
+                if(networkAvailable) {
+                    if (troupeDetailDTO.getAbout() != null && troupeDetailDTO.getAbout().trim().length() > 0) {
+                        aboutView.setVisibility(View.VISIBLE);
+                        about.setText(troupeDetailDTO.getAbout());
+                    } else {
+                        aboutView.setVisibility(View.GONE);
+                    }
+                    programName.setText(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getPrgrmName());
+                    performerImage.setImageResource(R.mipmap.ic_launcher);
+                    if (troupeDetailDTO.getAddress() != null && troupeDetailDTO.getAddress().trim().length() > 0) {
+                        addressLayout.setVisibility(View.VISIBLE);
+                        address.setText(troupeDetailDTO.getAddress());
+                    } else {
+                        addressLayout.setVisibility(View.GONE);
+                    }
+                    if (troupeDetailDTO.getMobile() != null && troupeDetailDTO.getMobile().trim().length() > 0) {
+                        mobile.setVisibility(View.VISIBLE);
+                        mobile.setText(troupeDetailDTO.getMobile());
+                    } else {
+                        mobile.setVisibility(View.GONE);
+                    }
+                    if (troupeDetailDTO.getPhone() != null && troupeDetailDTO.getPhone().trim().length() > 0) {
+                        phone.setVisibility(View.VISIBLE);
+                        phone.setText(troupeDetailDTO.getPhone());
+                    } else {
+                        phone.setVisibility(View.GONE);
+                    }
+                    if (troupeDetailDTO.getEmail() != null && troupeDetailDTO.getEmail().trim().length() > 0) {
+                        email.setVisibility(View.VISIBLE);
+                        email.setText(troupeDetailDTO.getEmail());
+                    } else {
+                        email.setVisibility(View.GONE);
+                    }
+                    if (troupeDetailDTO.getWebsite() != null && troupeDetailDTO.getWebsite().trim().length() > 0) {
+                        web.setVisibility(View.VISIBLE);
+                        web.setText(troupeDetailDTO.getWebsite());
+                    } else {
+                        web.setVisibility(View.GONE);
+                    }
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setTitle(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getName());
+                    }
+                    String url = "http://thiraseela.com/gleimo/Troupes/images/truopes" + TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
+                    ImageDownloader imageDownloader = new ImageDownloader();
+                    imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                    // HIDE THE SPINNER WHILE LOADING FEEDS
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.VISIBLE);
+                    timeoutLayout.setVisibility(View.GONE);
                 } else {
-                    address.setVisibility(View.GONE);
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.GONE);
+                    timeoutLayout.setVisibility(View.VISIBLE);
                 }
-                if (troupeDetailDTO.getMobile() != null && troupeDetailDTO.getMobile().trim().length() > 0) {
-                    mobile.setText(troupeDetailDTO.getMobile());
-                } else {
-                    mobile.setVisibility(View.GONE);
-                }
-                if (troupeDetailDTO.getPhone() != null && troupeDetailDTO.getPhone().trim().length() > 0) {
-                    phone.setText(troupeDetailDTO.getPhone());
-                } else {
-                    phone.setVisibility(View.GONE);
-                }
-                if (troupeDetailDTO.getEmail() != null && troupeDetailDTO.getEmail().trim().length() > 0) {
-                    email.setText(troupeDetailDTO.getEmail());
-                } else {
-                    email.setVisibility(View.GONE);
-                }
-                if (troupeDetailDTO.getWebsite() != null && troupeDetailDTO.getWebsite().trim().length() > 0) {
-                    web.setText(troupeDetailDTO.getWebsite());
-                } else {
-                    web.setVisibility(View.GONE);
-                }
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setTitle(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getName());
-                }
-                String url = "http://thiraseela.com/gleimo/Troupes/images/truopes" + TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
-                ImageDownloader imageDownloader = new ImageDownloader();
-                imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
-                 // HIDE THE SPINNER WHILE LOADING FEEDS
-                progressLayout.setVisibility(View.GONE);
-                contentLayout.setVisibility(View.VISIBLE);
             }
         }.execute();
     }

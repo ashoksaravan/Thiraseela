@@ -54,7 +54,7 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
         setContentView(R.layout.activity_events_detail);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
         setSupportActionBar(toolbar);
         placeHolderImage = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_launcher);
@@ -156,21 +156,25 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
         contactName.setText(EventsListActivity.EVENT_LIST_DTOS.get(i).getContactName());
         if (EventsListActivity.EVENT_LIST_DTOS.get(i).getPhone() != null && EventsListActivity.EVENT_LIST_DTOS.get(i).getPhone().trim().length() > 0) {
             phone.setText(EventsListActivity.EVENT_LIST_DTOS.get(i).getPhone());
+            phoneLayout.setVisibility(View.VISIBLE);
         } else {
             phoneLayout.setVisibility(View.GONE);
         }
         if (EventsListActivity.EVENT_LIST_DTOS.get(i).getMobile() != null && EventsListActivity.EVENT_LIST_DTOS.get(i).getMobile().trim().length() > 0) {
             mobile.setText(EventsListActivity.EVENT_LIST_DTOS.get(i).getMobile());
+            mobileLayout.setVisibility(View.VISIBLE);
         } else {
             mobileLayout.setVisibility(View.GONE);
         }
         if (EventsListActivity.EVENT_LIST_DTOS.get(i).getEmail() != null && EventsListActivity.EVENT_LIST_DTOS.get(i).getEmail().trim().length() > 0) {
             email.setText(EventsListActivity.EVENT_LIST_DTOS.get(i).getEmail());
+            emailLayout.setVisibility(View.VISIBLE);
         } else {
             emailLayout.setVisibility(View.GONE);
         }
         if (EventsListActivity.EVENT_LIST_DTOS.get(i).getWeb() != null && EventsListActivity.EVENT_LIST_DTOS.get(i).getWeb().trim().length() > 0) {
             web.setText(EventsListActivity.EVENT_LIST_DTOS.get(i).getWeb());
+            webLayout.setVisibility(View.VISIBLE);
         } else {
             webLayout.setVisibility(View.GONE);
         }

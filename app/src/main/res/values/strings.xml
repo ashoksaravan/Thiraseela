@@ -34,4 +34,6 @@
     <string name="website">Website</string>
     <string name="phone">phone</string>
     <string name="empty_view">No matching records found!!!</string>
+    <string name="connection_timeout">Connection Timeout</string>
+    <string name="retry">Retry</string>
 </resources>

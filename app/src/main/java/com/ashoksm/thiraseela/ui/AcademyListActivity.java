@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,13 +35,14 @@ public class AcademyListActivity extends AppCompatActivity {
     public static final String EXTRA_ACADEMY_ID = "EXTRA_ACADEMY_ID";
     public static final List<AcademyListDTO> ACADEMY_LIST_DTOS = new ArrayList<>();
     private AcademyListAdapter adapter = null;
+    private boolean networkAvailable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_academy_list);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
         setSupportActionBar(toolbar);
 
         EditText searchText = (EditText) findViewById(R.id.search_bar);
@@ -55,45 +57,15 @@ public class AcademyListActivity extends AppCompatActivity {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        new AsyncTask<Void, Void, Void>() {
+        loadDetails(mRecyclerView, emptyView);
 
-            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
-            RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
-
+        Button retryButton = (Button) findViewById(R.id.retryButton);
+        retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void onPreExecute() {
-                // SHOW THE SPINNER WHILE LOADING FEEDS
-                progressLayout.setVisibility(View.VISIBLE);
-                contentLayout.setVisibility(View.GONE);
+            public void onClick(View v) {
+                loadDetails(mRecyclerView, emptyView);
             }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                if (ACADEMY_LIST_DTOS.size() == 0) {
-                    ACADEMY_LIST_DTOS.clear();
-                    ObjectMapper mapper = new ObjectMapper();
-                    String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/academylistservice.php");
-                    Log.d("response", response);
-                    try {
-                        List<AcademyListDTO> temp = mapper.readValue(response,
-                                TypeFactory.defaultInstance().constructCollectionType(List.class, AcademyListDTO.class));
-                        ACADEMY_LIST_DTOS.addAll(temp);
-                    } catch (IOException e) {
-                        Log.e("AcademyListActivity", e.getLocalizedMessage());
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                adapter = new AcademyListAdapter(ACADEMY_LIST_DTOS, AcademyListActivity.this, mRecyclerView, emptyView);
-                mRecyclerView.setAdapter(adapter);
-                // HIDE THE SPINNER WHILE LOADING FEEDS
-                progressLayout.setVisibility(View.GONE);
-                contentLayout.setVisibility(View.VISIBLE);
-            }
-        }.execute();
+        });
 
 
         mRecyclerView.addOnItemTouchListener(
@@ -121,10 +93,63 @@ public class AcademyListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(adapter != null) {
+                if (adapter != null) {
                     adapter.getFilter().filter(s.toString());
                 }
             }
         });
+    }
+
+    private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
+        new AsyncTask<Void, Void, Void>() {
+
+            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
+            RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
+            LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
+
+            @Override
+            protected void onPreExecute() {
+                // SHOW THE SPINNER WHILE LOADING FEEDS
+                progressLayout.setVisibility(View.VISIBLE);
+                contentLayout.setVisibility(View.GONE);
+                timeoutLayout.setVisibility(View.GONE);
+                networkAvailable = true;
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                if (ACADEMY_LIST_DTOS.size() == 0) {
+                    ACADEMY_LIST_DTOS.clear();
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/academylistservice.php");
+                        Log.d("response", response);
+                        List<AcademyListDTO> temp = mapper.readValue(response,
+                                TypeFactory.defaultInstance().constructCollectionType(List.class, AcademyListDTO.class));
+                        ACADEMY_LIST_DTOS.addAll(temp);
+                    } catch (IOException e) {
+                        Log.e("AcademyListActivity", e.getLocalizedMessage());
+                        networkAvailable = false;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                if (networkAvailable) {
+                    adapter = new AcademyListAdapter(ACADEMY_LIST_DTOS, AcademyListActivity.this, mRecyclerView, emptyView);
+                    mRecyclerView.setAdapter(adapter);
+                    // HIDE THE SPINNER WHILE LOADING FEEDS
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.VISIBLE);
+                    timeoutLayout.setVisibility(View.GONE);
+                } else {
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.GONE);
+                    timeoutLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        }.execute();
     }
 }

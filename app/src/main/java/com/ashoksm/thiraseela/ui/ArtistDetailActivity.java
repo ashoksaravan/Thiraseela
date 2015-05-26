@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,8 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -43,6 +46,9 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
     private TextView email;
     private TextView web;
     private Bitmap placeHolderImage;
+    private CardView aboutView;
+    private RelativeLayout addressLayout;
+    private boolean networkAvailable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +56,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
         setContentView(R.layout.activity_artist_detail);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
+        toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
         setSupportActionBar(toolbar);
         placeHolderImage = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_launcher);
@@ -66,9 +72,18 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
         phone = (TextView) findViewById(R.id.phone);
         email = (TextView) findViewById(R.id.email);
         web = (TextView) findViewById(R.id.web);
+        aboutView = (CardView) findViewById(R.id.aboutView);
+        addressLayout = (RelativeLayout) findViewById(R.id.addressLayout);
         loadDetails();
         // Detect touched area
         detector = new SimpleGestureFilter(this, this);
+        Button retryButton = (Button) findViewById(R.id.retryButton);
+        retryButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                loadDetails();
+            }
+        });
     }
 
     @Override
@@ -103,6 +118,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
             ArtistDetailDTO artistDetailDTO = new ArtistDetailDTO();
             LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
             ScrollView contentLayout = (ScrollView) findViewById(R.id.contentLayout);
+            LinearLayout retryLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
 
             @Override
             protected void onPreExecute() {
@@ -112,59 +128,78 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
                 // SHOW THE SPINNER WHILE LOADING FEEDS
                 progressLayout.setVisibility(View.VISIBLE);
                 contentLayout.setVisibility(View.GONE);
+                retryLayout.setVisibility(View.GONE);
+                networkAvailable = true;
             }
 
             @Override
             protected Void doInBackground(Void... params) {
                 ObjectMapper mapper = new ObjectMapper();
-                String response = WSClient.execute(String.valueOf(ArtistListActivity.ARTIST_LIST_VOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/performerdetailservice.php");
-                Log.d("response", response);
-
                 try {
+                    String response = WSClient.execute(String.valueOf(ArtistListActivity.ARTIST_LIST_VOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/performerdetailservice.php");
+                    Log.d("response", response);
                     artistDetailDTO = mapper.readValue(response, ArtistDetailDTO.class);
                 } catch (IOException e) {
                     Log.e("ArtistDetailActivity", e.getLocalizedMessage());
+                    networkAvailable = false;
                 }
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                about.setText(artistDetailDTO.getAbout());
-                performerImage.setImageResource(R.mipmap.ic_launcher);
-                designation.setText(ArtistListActivity.ARTIST_LIST_VOS.get(i).getTitle());
-                location.setText(artistDetailDTO.getPlace() + ", " + artistDetailDTO.getCity());
-                if (artistDetailDTO.getAddress() != null && artistDetailDTO.getAddress().trim().length() > 0) {
-                    address.setText(artistDetailDTO.getAddress());
+                if(networkAvailable) {
+                    if (artistDetailDTO.getAbout() != null && artistDetailDTO.getAbout().trim().length() > 0) {
+                        aboutView.setVisibility(View.VISIBLE);
+                        about.setText(artistDetailDTO.getAbout());
+                    } else {
+                        aboutView.setVisibility(View.GONE);
+                    }
+                    performerImage.setImageResource(R.mipmap.ic_launcher);
+                    designation.setText(ArtistListActivity.ARTIST_LIST_VOS.get(i).getTitle());
+                    location.setText(artistDetailDTO.getPlace() + ", " + artistDetailDTO.getCity());
+                    if (artistDetailDTO.getAddress() != null && artistDetailDTO.getAddress().trim().length() > 0) {
+                        addressLayout.setVisibility(View.VISIBLE);
+                        address.setText(artistDetailDTO.getAddress());
+                    } else {
+                        addressLayout.setVisibility(View.GONE);
+                    }
+                    if (artistDetailDTO.getMobile() != null && artistDetailDTO.getMobile().trim().length() > 0) {
+                        mobile.setVisibility(View.VISIBLE);
+                        mobile.setText(artistDetailDTO.getMobile());
+                    } else {
+                        mobile.setVisibility(View.GONE);
+                    }
+                    if (artistDetailDTO.getPhone() != null && artistDetailDTO.getPhone().trim().length() > 0) {
+                        phone.setVisibility(View.VISIBLE);
+                        phone.setText(artistDetailDTO.getPhone());
+                    } else {
+                        phone.setVisibility(View.GONE);
+                    }
+                    if (artistDetailDTO.getEmail() != null && artistDetailDTO.getEmail().trim().length() > 0) {
+                        email.setVisibility(View.VISIBLE);
+                        email.setText(artistDetailDTO.getEmail());
+                    } else {
+                        email.setVisibility(View.GONE);
+                    }
+                    if (artistDetailDTO.getWebsite() != null && artistDetailDTO.getWebsite().trim().length() > 0) {
+                        web.setVisibility(View.VISIBLE);
+                        web.setText(artistDetailDTO.getWebsite());
+                    } else {
+                        web.setVisibility(View.GONE);
+                    }
+                    String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + ArtistListActivity.ARTIST_LIST_VOS.get(i).getId() + "/Perfmr_img.jpeg";
+                    ImageDownloader imageDownloader = new ImageDownloader();
+                    imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                    // HIDE THE SPINNER WHILE LOADING FEEDS
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.VISIBLE);
+                    retryLayout.setVisibility(View.GONE);
                 } else {
-                    address.setVisibility(View.GONE);
+                    progressLayout.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.GONE);
+                    retryLayout.setVisibility(View.VISIBLE);
                 }
-                if (artistDetailDTO.getMobile() != null && artistDetailDTO.getMobile().trim().length() > 0) {
-                    mobile.setText(artistDetailDTO.getMobile());
-                } else {
-                    mobile.setVisibility(View.GONE);
-                }
-                if (artistDetailDTO.getPhone() != null && artistDetailDTO.getPhone().trim().length() > 0) {
-                    phone.setText(artistDetailDTO.getPhone());
-                } else {
-                    phone.setVisibility(View.GONE);
-                }
-                if (artistDetailDTO.getEmail() != null && artistDetailDTO.getEmail().trim().length() > 0) {
-                    email.setText(artistDetailDTO.getEmail());
-                } else {
-                    email.setVisibility(View.GONE);
-                }
-                if (artistDetailDTO.getWebsite() != null && artistDetailDTO.getWebsite().trim().length() > 0) {
-                    web.setText(artistDetailDTO.getWebsite());
-                } else {
-                    web.setVisibility(View.GONE);
-                }
-                String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + ArtistListActivity.ARTIST_LIST_VOS.get(i).getId() + "/Perfmr_img.jpeg";
-                ImageDownloader imageDownloader = new ImageDownloader();
-                imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
-                // HIDE THE SPINNER WHILE LOADING FEEDS
-                progressLayout.setVisibility(View.GONE);
-                contentLayout.setVisibility(View.VISIBLE);
             }
         }.execute();
     }
