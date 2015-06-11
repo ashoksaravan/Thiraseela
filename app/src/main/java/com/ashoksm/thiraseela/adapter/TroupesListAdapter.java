@@ -1,5 +1,6 @@
 package com.ashoksm.thiraseela.adapter;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -57,7 +58,9 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
         context = contextIn;
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
-        imageDownloader = new ImageDownloader();
+        ActivityManager am = (ActivityManager)  contextIn.getSystemService(Context.ACTIVITY_SERVICE);
+        int memClassBytes = am.getMemoryClass();
+        imageDownloader = new ImageDownloader(memClassBytes);
         recyclerView = recyclerViewIn;
         emptyView = emptyViewIn;
     }
@@ -80,7 +83,12 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
         holder.txtFooter.setText(troupeListDTO.getPrgrmName());
         holder.location.setText(troupeListDTO.getPlace() + ", " + troupeListDTO.getCity());
         String url = "http://thiraseela.com/gleimo/Troupes/images/truopes" + troupeListDTO.getId() + "/thumb/logo.jpeg";
-        imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
+        Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
+        if (bitmap == null) {
+            imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
+        } else {
+            holder.imageView.setImageBitmap(bitmap);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

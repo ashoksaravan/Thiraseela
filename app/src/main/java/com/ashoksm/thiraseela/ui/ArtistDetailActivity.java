@@ -1,5 +1,7 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,6 +51,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
     private CardView aboutView;
     private RelativeLayout addressLayout;
     private boolean networkAvailable = true;
+    private ImageDownloader imageDownloader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +143,6 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
                     Log.d("response", response);
                     artistDetailDTO = mapper.readValue(response, ArtistDetailDTO.class);
                 } catch (IOException e) {
-                    Log.e("ArtistDetailActivity", e.getLocalizedMessage());
                     networkAvailable = false;
                 }
                 return null;
@@ -151,7 +153,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
                 if(networkAvailable) {
                     if (artistDetailDTO.getAbout() != null && artistDetailDTO.getAbout().trim().length() > 0) {
                         aboutView.setVisibility(View.VISIBLE);
-                        about.setText(artistDetailDTO.getAbout());
+                        about.setText(artistDetailDTO.getAbout().replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'"));
                     } else {
                         aboutView.setVisibility(View.GONE);
                     }
@@ -160,7 +162,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
                     location.setText(artistDetailDTO.getPlace() + ", " + artistDetailDTO.getCity());
                     if (artistDetailDTO.getAddress() != null && artistDetailDTO.getAddress().trim().length() > 0) {
                         addressLayout.setVisibility(View.VISIBLE);
-                        address.setText(artistDetailDTO.getAddress());
+                        address.setText(artistDetailDTO.getAddress().replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'"));
                     } else {
                         addressLayout.setVisibility(View.GONE);
                     }
@@ -189,8 +191,17 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
                         web.setVisibility(View.GONE);
                     }
                     String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + ArtistListActivity.ARTIST_LIST_VOS.get(i).getId() + "/Perfmr_img.jpeg";
-                    ImageDownloader imageDownloader = new ImageDownloader();
-                    imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                    if(imageDownloader == null) {
+                        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                        int memClassBytes = am.getMemoryClass();
+                        imageDownloader = new ImageDownloader(memClassBytes);
+                    }
+                    Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
+                    if (bitmap == null) {
+                        imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                    } else {
+                        performerImage.setImageBitmap(bitmap);
+                    }
                     // HIDE THE SPINNER WHILE LOADING FEEDS
                     progressLayout.setVisibility(View.GONE);
                     contentLayout.setVisibility(View.VISIBLE);
@@ -222,7 +233,8 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
         switch (item.getItemId()) {
             case R.id.action_home:
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 getApplicationContext().startActivity(intent);
                 return true;
             default:

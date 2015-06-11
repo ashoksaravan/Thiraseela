@@ -60,6 +60,7 @@
         </activity>
         <activity
             android:name=".ui.ArtistDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_artist_detail"
             android:parentActivityName=".ui.ArtistListActivity">
             <meta-data
@@ -68,6 +69,7 @@
         </activity>
         <activity
             android:name=".ui.TroupesDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_troupes_detail"
             android:parentActivityName=".ui.TroupesListActivity">
             <meta-data
@@ -76,6 +78,7 @@
         </activity>
         <activity
             android:name=".ui.AcademyDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_academy_detail"
             android:parentActivityName=".ui.AcademyListActivity">
             <meta-data
@@ -84,6 +87,7 @@
         </activity>
         <activity
             android:name=".ui.EventsDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_events_detail"
             android:parentActivityName=".ui.EventsListActivity">
             <meta-data
@@ -92,6 +96,7 @@
         </activity>
         <activity
             android:name=".ui.AboutUSActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/about_us"
             android:parentActivityName=".ui.MainActivity">
             <meta-data

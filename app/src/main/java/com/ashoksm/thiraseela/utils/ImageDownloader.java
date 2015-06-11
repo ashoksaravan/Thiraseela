@@ -3,6 +3,7 @@ package com.ashoksm.thiraseela.utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -21,6 +22,10 @@ import java.net.URL;
 public class ImageDownloader {
 
     private LruCache<String, Bitmap> mMemoryCache;
+    private int memClassBytes;
+    public ImageDownloader(int memClassBytesIn) {
+        memClassBytes = memClassBytesIn;
+    }
 
 
     public void download(String url, ImageView imageView, Resources res, Bitmap bitmap) {
@@ -29,7 +34,7 @@ public class ImageDownloader {
             // Get max available VM memory, exceeding this amount will throw an
             // OutOfMemory exception. Stored in kilobytes as LruCache takes an
             // int in its constructor.
-            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            final int maxMemory = memClassBytes * 1024 * 1024;
 
             // Use 1/8th of the available memory for this memory cache.
             final int cacheSize = maxMemory / 8;
@@ -72,6 +77,9 @@ public class ImageDownloader {
             try {
                 url = params[0];
                 Bitmap bitmap = BitmapFactory.decodeStream(new URL((params[0])).openStream());
+                if(bitmap.getWidth() > 300 && bitmap.getHeight() > 400) {
+                    bitmap = getResizedBitmap(bitmap, 300, 400);
+                }
                 addBitmapToMemoryCache(url, bitmap);
                 return bitmap;
             } catch (IOException e) {
@@ -151,5 +159,23 @@ public class ImageDownloader {
         }
         return bitmap;
     }
+
+
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+    }
+
+
 }
 

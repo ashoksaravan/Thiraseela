@@ -1,5 +1,7 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,6 +49,7 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
     private LinearLayout webLayout;
     private ImageView performerImg;
     private Bitmap placeHolderImage;
+    private ImageDownloader imageDownloader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +100,8 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
         switch (item.getItemId()) {
             case R.id.action_home:
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 getApplicationContext().startActivity(intent);
                 return true;
             default:
@@ -180,8 +184,17 @@ public class EventsDetailActivity extends AppCompatActivity implements SimpleGes
         }
         if (EventsListActivity.EVENT_LIST_DTOS.get(i).getLogo() != null && EventsListActivity.EVENT_LIST_DTOS.get(i).getLogo().trim().length() > 0) {
             String url = "http://thiraseela.com/" + EventsListActivity.EVENT_LIST_DTOS.get(i).getLogo();
-            ImageDownloader imageDownloader = new ImageDownloader();
-            imageDownloader.download(url, performerImg, getResources(), placeHolderImage);
+            if(imageDownloader == null) {
+                ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                int memClassBytes = am.getMemoryClass();
+                imageDownloader = new ImageDownloader(memClassBytes);
+            }
+            Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
+            if (bitmap == null) {
+                imageDownloader.download(url, performerImg, getResources(), placeHolderImage);
+            } else {
+                performerImg.setImageBitmap(bitmap);
+            }
         }
     }
 }

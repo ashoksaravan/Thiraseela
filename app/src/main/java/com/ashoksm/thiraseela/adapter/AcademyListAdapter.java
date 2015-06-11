@@ -1,5 +1,6 @@
 package com.ashoksm.thiraseela.adapter;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -55,7 +56,9 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         context = contextIn;
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
-        imageDownloader = new ImageDownloader();
+        ActivityManager am = (ActivityManager) contextIn.getSystemService(Context.ACTIVITY_SERVICE);
+        int memClassBytes = am.getMemoryClass();
+        imageDownloader = new ImageDownloader(memClassBytes);
         recyclerView = recyclerViewIn;
         emptyView = emptyViewIn;
     }
@@ -78,7 +81,12 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         holder.txtHeader.setText(academyListDTO.getName());
         holder.txtFooter.setText(academyListDTO.getPlace() + ", " + academyListDTO.getCity());
         String url = "http://thiraseela.com/gleimo/Academy/images/academy" + academyListDTO.getId() + "/thumb/logo.jpeg";
-        imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
+        Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
+        if (bitmap == null) {
+            imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
+        } else {
+            holder.imageView.setImageBitmap(bitmap);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -132,7 +140,7 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.filteredAcademyListDTOs.clear();
             adapter.filteredAcademyListDTOs.addAll((ArrayList<AcademyListDTO>) results.values);
-            if(adapter.filteredAcademyListDTOs.size() == 0) {
+            if (adapter.filteredAcademyListDTOs.size() == 0) {
                 recyclerView.setVisibility(View.GONE);
                 emptyView.setVisibility(View.VISIBLE);
             } else {

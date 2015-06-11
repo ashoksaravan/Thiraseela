@@ -1,5 +1,7 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,6 +50,7 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
     private CardView aboutView;
     private RelativeLayout addressLayout;
     private boolean networkAvailable = true;
+    private ImageDownloader imageDownloader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +82,7 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
         loadDetails();
 
         Button retryButton = (Button) findViewById(R.id.retryButton);
-        retryButton.setOnClickListener(new View.OnClickListener(){
+        retryButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -154,10 +157,10 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(networkAvailable) {
+                if (networkAvailable) {
                     if (troupeDetailDTO.getAbout() != null && troupeDetailDTO.getAbout().trim().length() > 0) {
                         aboutView.setVisibility(View.VISIBLE);
-                        about.setText(troupeDetailDTO.getAbout());
+                        about.setText(troupeDetailDTO.getAbout().replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'"));
                     } else {
                         aboutView.setVisibility(View.GONE);
                     }
@@ -165,7 +168,7 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
                     performerImage.setImageResource(R.mipmap.ic_launcher);
                     if (troupeDetailDTO.getAddress() != null && troupeDetailDTO.getAddress().trim().length() > 0) {
                         addressLayout.setVisibility(View.VISIBLE);
-                        address.setText(troupeDetailDTO.getAddress());
+                        address.setText(troupeDetailDTO.getAddress().replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'"));
                     } else {
                         addressLayout.setVisibility(View.GONE);
                     }
@@ -197,8 +200,17 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
                         getSupportActionBar().setTitle(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getName());
                     }
                     String url = "http://thiraseela.com/gleimo/Troupes/images/truopes" + TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
-                    ImageDownloader imageDownloader = new ImageDownloader();
-                    imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                    if (imageDownloader == null) {
+                        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                        int memClassBytes = am.getMemoryClass();
+                        imageDownloader = new ImageDownloader(memClassBytes);
+                    }
+                    Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
+                    if (bitmap == null) {
+                        imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                    } else {
+                        performerImage.setImageBitmap(bitmap);
+                    }
                     // HIDE THE SPINNER WHILE LOADING FEEDS
                     progressLayout.setVisibility(View.GONE);
                     contentLayout.setVisibility(View.VISIBLE);
@@ -212,7 +224,7 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
         }.execute();
     }
 
- @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
@@ -226,7 +238,8 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
         switch (item.getItemId()) {
             case R.id.action_home:
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 getApplicationContext().startActivity(intent);
                 return true;
             default:

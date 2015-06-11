@@ -1,5 +1,7 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,6 +50,7 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
     private CardView aboutView;
     private RelativeLayout addressLayout;
     private boolean networkAvailable = true;
+    private  ImageDownloader imageDownloader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +103,8 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
         switch (item.getItemId()) {
             case R.id.action_home:
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 getApplicationContext().startActivity(intent);
                 return true;
             default:
@@ -177,7 +181,7 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
                 if(networkAvailable) {
                     if (academyDetailDTO.getAbout() != null && academyDetailDTO.getAbout().trim().length() > 0) {
                         aboutView.setVisibility(View.VISIBLE);
-                        about.setText(academyDetailDTO.getAbout());
+                        about.setText(academyDetailDTO.getAbout().replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'"));
                     } else {
                         aboutView.setVisibility(View.GONE);
                     }
@@ -186,7 +190,7 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
                     acadType.setText(academyDetailDTO.getAcadType());
                     if (academyDetailDTO.getAddress() != null && academyDetailDTO.getAddress().trim().length() > 0) {
                         addressLayout.setVisibility(View.VISIBLE);
-                        address.setText(academyDetailDTO.getAddress());
+                        address.setText(academyDetailDTO.getAddress().replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'"));
                     } else {
                         addressLayout.setVisibility(View.GONE);
                     }
@@ -214,9 +218,18 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
                     } else {
                         web.setVisibility(View.GONE);
                     }
-                    ImageDownloader imageDownloader = new ImageDownloader();
+                    if(imageDownloader == null) {
+                        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                        int memClassBytes = am.getMemoryClass();
+                        imageDownloader = new ImageDownloader(memClassBytes);
+                    }
                     String url = "http://thiraseela.com/gleimo/Academy/images/academy" + AcademyListActivity.ACADEMY_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
-                    imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                    Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
+                    if (bitmap == null) {
+                        imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
+                    } else {
+                        performerImage.setImageBitmap(bitmap);
+                    }
                     // HIDE THE SPINNER WHILE LOADING FEEDS
                     progressLayout.setVisibility(View.GONE);
                     contentLayout.setVisibility(View.VISIBLE);

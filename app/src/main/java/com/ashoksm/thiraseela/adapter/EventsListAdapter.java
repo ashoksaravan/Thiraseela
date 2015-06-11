@@ -1,5 +1,6 @@
 package com.ashoksm.thiraseela.adapter;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -64,7 +65,9 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         context = contextIn;
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
-        imageDownloader = new ImageDownloader();
+        ActivityManager am = (ActivityManager)  contextIn.getSystemService(Context.ACTIVITY_SERVICE);
+        int memClassBytes = am.getMemoryClass();
+        imageDownloader = new ImageDownloader(memClassBytes);
         recyclerView = recyclerViewIn;
         emptyView = emptyViewIn;
     }
@@ -96,7 +99,12 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         holder.time.setText("Time : " + eventListDTO.getFromTime() + " - " + eventListDTO.getToTime());
         if(eventListDTO.getTsimg() != null && eventListDTO.getTsimg().trim().length() > 0) {
             String url = "http://thiraseela.com/" + eventListDTO.getTsimg();
-            imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
+            Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
+            if (bitmap == null) {
+                imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
+            } else {
+                holder.imageView.setImageBitmap(bitmap);
+            }
         }
     }
 

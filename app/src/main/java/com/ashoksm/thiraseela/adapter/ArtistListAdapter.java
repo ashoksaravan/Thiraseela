@@ -1,5 +1,6 @@
 package com.ashoksm.thiraseela.adapter;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,7 +55,9 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         filteredArtistListDTOs.addAll(artistListVOsIn);
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
-        imageDownloader = new ImageDownloader();
+        ActivityManager am = (ActivityManager)  contextIn.getSystemService(Context.ACTIVITY_SERVICE);
+        int memClassBytes = am.getMemoryClass();
+        imageDownloader = new ImageDownloader(memClassBytes);
         context = contextIn;
         recyclerView = recyclerViewIn;
         emptyView = emptyViewIn;
@@ -78,7 +81,12 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         holder.txtHeader.setText(artistListDTO.getName());
         holder.txtFooter.setText(artistListDTO.getTitle());
         String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + artistListDTO.getId() + "/thumb/Perfmr_img.jpeg";
-        imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
+        Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
+        if(bitmap == null) {
+            imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
+        } else {
+            holder.imageView.setImageBitmap(bitmap);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
