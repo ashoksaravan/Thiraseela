@@ -54,11 +54,9 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         this.academyListDTOs = academyListDTOsIn;
         filteredAcademyListDTOs.addAll(academyListDTOsIn);
         context = contextIn;
-        placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
-                R.mipmap.ic_launcher);
+        placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(), R.mipmap.ic_launcher);
         ActivityManager am = (ActivityManager) contextIn.getSystemService(Context.ACTIVITY_SERVICE);
-        int memClassBytes = am.getMemoryClass();
-        imageDownloader = new ImageDownloader(memClassBytes);
+        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
         recyclerView = recyclerViewIn;
         emptyView = emptyViewIn;
     }

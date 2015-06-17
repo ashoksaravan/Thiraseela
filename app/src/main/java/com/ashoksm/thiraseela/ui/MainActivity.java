@@ -1,16 +1,23 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.ashoksm.thiraseela.R;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/home_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,52 +28,66 @@ public class MainActivity extends AppCompatActivity {
         Button academy = (Button) findViewById(R.id.academy);
         Button events = (Button) findViewById(R.id.events);
         Button aboutUS = (Button) findViewById(R.id.about_us);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                .permitAll().build();
+
+        ImageView homeBG = (ImageView) findViewById(R.id.home_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            homeBG.setImageBitmap(bitmap);
+        } else {
+            downloader.download(URL, homeBG, null, null);
+        }
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         artists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ArtistListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+                startActivity(ArtistListActivity.class);
             }
         });
 
         troupes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TroupesListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+                startActivity(TroupesListActivity.class);
             }
         });
 
         academy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AcademyListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+                startActivity(AcademyListActivity.class);
             }
         });
 
         events.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EventsListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+                startActivity(EventsListActivity.class);
             }
         });
 
         aboutUS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AboutUSActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+                startActivity(AboutUSActivity.class);
             }
         });
+    }
+
+    private void startActivity(Class clazz) {
+        Intent intent = new Intent(getApplicationContext(), clazz);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_out_left, 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.slide_in_left, 0);
     }
 }

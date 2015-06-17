@@ -58,9 +58,8 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
         context = contextIn;
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
-        ActivityManager am = (ActivityManager)  contextIn.getSystemService(Context.ACTIVITY_SERVICE);
-        int memClassBytes = am.getMemoryClass();
-        imageDownloader = new ImageDownloader(memClassBytes);
+        ActivityManager am = (ActivityManager) contextIn.getSystemService(Context.ACTIVITY_SERVICE);
+        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
         recyclerView = recyclerViewIn;
         emptyView = emptyViewIn;
     }
@@ -142,7 +141,7 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.filteredTroupeListDTOs.clear();
             adapter.filteredTroupeListDTOs.addAll((ArrayList<TroupeListDTO>) results.values);
-            if(adapter.filteredTroupeListDTOs.size() == 0) {
+            if (adapter.filteredTroupeListDTOs.size() == 0) {
                 recyclerView.setVisibility(View.GONE);
                 emptyView.setVisibility(View.VISIBLE);
             } else {

@@ -1,16 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/artist_detail_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.ashoksm.thiraseela.ui.EventsDetailActivity">
+<FrameLayout android:id="@+id/artist_detail_view"
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.ashoksm.thiraseela.ui.EventsDetailActivity">
 
     <ImageView
+        android:id="@+id/inner_bg"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:contentDescription="@string/icon"
-        android:scaleType="fitXY"
-        android:src="@drawable/inner_bg" />
+        android:scaleType="fitXY"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -32,15 +32,15 @@
                 android:layout_margin="5dp"
                 android:contentDescription="@string/performer_img"
                 android:scaleType="fitXY"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher"/>
 
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:elevation="5dp">
+                                                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_margin="5dp"
+                                                card_view:cardCornerRadius="4dp"
+                                                card_view:elevation="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -57,14 +57,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/event_name"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/event_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -77,14 +77,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/category"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/category"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -97,14 +97,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/by"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/by"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -117,14 +117,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/venue"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/venue"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -137,14 +137,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/city"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/city"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -157,14 +157,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/date"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/date"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -177,26 +177,26 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/time"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/time"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
                     </LinearLayout>
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:elevation="5dp">
+                                                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_margin="5dp"
+                                                card_view:cardCornerRadius="4dp"
+                                                card_view:elevation="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -208,7 +208,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorPrimary"
                         android:text="@string/contact_details"
-                        android:textColor="#ffffff" />
+                        android:textColor="#ffffff"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -220,14 +220,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/name"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/contact_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                     </LinearLayout>
 
@@ -242,7 +242,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/mobile"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/mobile"
@@ -250,7 +250,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
                             android:autoLink="all"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                     </LinearLayout>
 
@@ -265,7 +265,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/phone"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/phone"
@@ -273,7 +273,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
                             android:autoLink="all"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                     </LinearLayout>
 
@@ -288,7 +288,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".2"
                             android:text="@string/email"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/email"
@@ -296,7 +296,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
                             android:autoLink="all"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                     </LinearLayout>
 
@@ -312,7 +312,7 @@
                             android:layout_weight=".2"
                             android:autoLink="all"
                             android:text="@string/website"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                         <TextView
                             android:id="@+id/web"
@@ -320,7 +320,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".8"
                             android:autoLink="all"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -328,12 +328,12 @@
         </LinearLayout>
     </ScrollView>
 
-    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/my_awesome_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <android.support.v7.widget.Toolbar android:id="@+id/my_awesome_toolbar"
+                                       xmlns:app="http://schemas.android.com/apk/res-auto"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="wrap_content"
+                                       android:background="?attr/colorPrimary"
+                                       android:minHeight="?attr/actionBarSize"
+                                       app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                                       app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 </FrameLayout>

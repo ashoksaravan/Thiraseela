@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -50,7 +51,8 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
     private CardView aboutView;
     private RelativeLayout addressLayout;
     private boolean networkAvailable = true;
-    private  ImageDownloader imageDownloader;
+    private ImageDownloader imageDownloader;
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/inner_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,6 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
         setSupportActionBar(toolbar);
         placeHolderImage = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_launcher);
-
 
         String name = getIntent().getStringExtra(AcademyListActivity.EXTRA_ACADEMY_ID);
         i = Integer.valueOf(name);
@@ -78,12 +79,22 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
         addressLayout = (RelativeLayout) findViewById(R.id.addressLayout);
         loadDetails();
         Button retryButton = (Button) findViewById(R.id.retryButton);
-        retryButton.setOnClickListener(new View.OnClickListener(){
+        retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadDetails();
             }
         });
+
+        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            innerBG.setImageBitmap(bitmap);
+        } else {
+            downloader.download(URL, innerBG, null, null);
+        }
 
         // Detect touched area
         detector = new SimpleGestureFilter(this, this);
@@ -104,8 +115,11 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
             case R.id.action_home:
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                getApplicationContext().startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+                }
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -166,7 +180,8 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
             protected Void doInBackground(Void... params) {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    String response = WSClient.execute(String.valueOf(AcademyListActivity.ACADEMY_LIST_DTOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/academydetailservice.php");
+                    String response = WSClient.execute(String.valueOf(AcademyListActivity.ACADEMY_LIST_DTOS.get(i).getId()),
+                            "http://thiraseela.com/thiraandroidapp/academydetailservice.php");
                     Log.d("response", response);
                     academyDetailDTO = mapper.readValue(response, AcademyDetailDTO.class);
                 } catch (IOException e) {
@@ -178,7 +193,7 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(networkAvailable) {
+                if (networkAvailable) {
                     if (academyDetailDTO.getAbout() != null && academyDetailDTO.getAbout().trim().length() > 0) {
                         aboutView.setVisibility(View.VISIBLE);
                         about.setText(academyDetailDTO.getAbout().replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'"));
@@ -218,12 +233,12 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
                     } else {
                         web.setVisibility(View.GONE);
                     }
-                    if(imageDownloader == null) {
+                    if (imageDownloader == null) {
                         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                        int memClassBytes = am.getMemoryClass();
-                        imageDownloader = new ImageDownloader(memClassBytes);
+                        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
                     }
-                    String url = "http://thiraseela.com/gleimo/Academy/images/academy" + AcademyListActivity.ACADEMY_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
+                    String url = "http://thiraseela.com/gleimo/Academy/images/academy"
+                            + AcademyListActivity.ACADEMY_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
                     Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
                     if (bitmap == null) {
                         imageDownloader.download(url, performerImage, getResources(), placeHolderImage);
@@ -241,5 +256,11 @@ public class AcademyDetailActivity extends AppCompatActivity implements SimpleGe
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, 0);
     }
 }

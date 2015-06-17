@@ -1,6 +1,9 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.adapter.ArtistListAdapter;
 import com.ashoksm.thiraseela.dto.ArtistListDTO;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 import com.ashoksm.thiraseela.utils.RecyclerItemClickListener;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +40,7 @@ public class ArtistListActivity extends AppCompatActivity {
     public static final List<ArtistListDTO> ARTIST_LIST_VOS = new ArrayList<>();
     private ArtistListAdapter adapter = null;
     private boolean networkAvailable = true;
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/inner_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +76,12 @@ public class ArtistListActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(), ArtistDetailActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         ArtistListDTO artistListDTO = adapter.getFilteredArtistListDTOs().get(position);
                         int i = ARTIST_LIST_VOS.indexOf(artistListDTO);
                         intent.putExtra(EXTRA_PERFORMER_NAME, String.valueOf(i));
-                        getApplicationContext().startActivity(intent);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_out_left, 0);
                     }
                 })
         );
@@ -95,6 +102,15 @@ public class ArtistListActivity extends AppCompatActivity {
                 }
             }
         });
+        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            innerBG.setImageBitmap(bitmap);
+        } else {
+            downloader.download(URL, innerBG, null, null);
+        }
     }
 
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
@@ -133,7 +149,7 @@ public class ArtistListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                if(networkAvailable) {
+                if (networkAvailable) {
                     adapter = new ArtistListAdapter(ARTIST_LIST_VOS, ArtistListActivity.this, mRecyclerView, emptyView);
                     mRecyclerView.setAdapter(adapter);
                     // HIDE THE SPINNER WHILE LOADING FEEDS
@@ -147,5 +163,17 @@ public class ArtistListActivity extends AppCompatActivity {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.slide_in_left, 0);
     }
 }

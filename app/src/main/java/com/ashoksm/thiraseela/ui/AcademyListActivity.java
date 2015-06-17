@@ -1,6 +1,9 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.adapter.AcademyListAdapter;
 import com.ashoksm.thiraseela.dto.AcademyListDTO;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 import com.ashoksm.thiraseela.utils.RecyclerItemClickListener;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,6 +41,7 @@ public class AcademyListActivity extends AppCompatActivity {
     public static final List<AcademyListDTO> ACADEMY_LIST_DTOS = new ArrayList<>();
     private AcademyListAdapter adapter = null;
     private boolean networkAvailable = true;
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/inner_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +79,12 @@ public class AcademyListActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(), AcademyDetailActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         AcademyListDTO academyListDTO = adapter.getFilteredAcademyListDTOs().get(position);
                         int i = ACADEMY_LIST_DTOS.indexOf(academyListDTO);
                         intent.putExtra(EXTRA_ACADEMY_ID, String.valueOf(i));
-                        getApplicationContext().startActivity(intent);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_out_left, 0);
                     }
                 })
         );
@@ -98,6 +105,16 @@ public class AcademyListActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            innerBG.setImageBitmap(bitmap);
+        } else {
+            downloader.download(URL, innerBG, null, null);
+        }
     }
 
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
@@ -151,5 +168,17 @@ public class AcademyListActivity extends AppCompatActivity {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.slide_in_left, 0);
     }
 }

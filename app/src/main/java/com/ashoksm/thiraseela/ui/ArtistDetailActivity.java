@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +53,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
     private RelativeLayout addressLayout;
     private boolean networkAvailable = true;
     private ImageDownloader imageDownloader;
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/inner_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +83,22 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
         // Detect touched area
         detector = new SimpleGestureFilter(this, this);
         Button retryButton = (Button) findViewById(R.id.retryButton);
-        retryButton.setOnClickListener(new View.OnClickListener(){
+        retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadDetails();
             }
         });
+
+        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = imageDownloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            innerBG.setImageBitmap(bitmap);
+        } else {
+            imageDownloader.download(URL, innerBG, null, null);
+        }
     }
 
     @Override
@@ -139,7 +151,8 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
             protected Void doInBackground(Void... params) {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    String response = WSClient.execute(String.valueOf(ArtistListActivity.ARTIST_LIST_VOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/performerdetailservice.php");
+                    String response = WSClient.execute(String.valueOf(ArtistListActivity.ARTIST_LIST_VOS.get(i).getId()),
+                            "http://thiraseela.com/thiraandroidapp/performerdetailservice.php");
                     Log.d("response", response);
                     artistDetailDTO = mapper.readValue(response, ArtistDetailDTO.class);
                 } catch (IOException e) {
@@ -150,7 +163,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(networkAvailable) {
+                if (networkAvailable) {
                     if (artistDetailDTO.getAbout() != null && artistDetailDTO.getAbout().trim().length() > 0) {
                         aboutView.setVisibility(View.VISIBLE);
                         about.setText(artistDetailDTO.getAbout().replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'"));
@@ -190,11 +203,11 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
                     } else {
                         web.setVisibility(View.GONE);
                     }
-                    String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + ArtistListActivity.ARTIST_LIST_VOS.get(i).getId() + "/Perfmr_img.jpeg";
-                    if(imageDownloader == null) {
+                    String url = "http://thiraseela.com/gleimo/performers/images/perfomr"
+                            + ArtistListActivity.ARTIST_LIST_VOS.get(i).getId() + "/Perfmr_img.jpeg";
+                    if (imageDownloader == null) {
                         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                        int memClassBytes = am.getMemoryClass();
-                        imageDownloader = new ImageDownloader(memClassBytes);
+                        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
                     }
                     Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
                     if (bitmap == null) {
@@ -219,7 +232,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
     public void onDoubleTap() {
     }
 
-@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
@@ -234,11 +247,20 @@ public class ArtistDetailActivity extends AppCompatActivity implements SimpleGes
             case R.id.action_home:
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                getApplicationContext().startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+                }
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, 0);
     }
 }

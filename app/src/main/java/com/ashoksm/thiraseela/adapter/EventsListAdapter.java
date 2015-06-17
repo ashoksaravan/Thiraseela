@@ -63,11 +63,9 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         eventListDTOs = eventListDTOsIn;
         filteredArtistListDTOs.addAll(eventListDTOsIn);
         context = contextIn;
-        placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
-                R.mipmap.ic_launcher);
-        ActivityManager am = (ActivityManager)  contextIn.getSystemService(Context.ACTIVITY_SERVICE);
-        int memClassBytes = am.getMemoryClass();
-        imageDownloader = new ImageDownloader(memClassBytes);
+        placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(), R.mipmap.ic_launcher);
+        ActivityManager am = (ActivityManager) contextIn.getSystemService(Context.ACTIVITY_SERVICE);
+        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
         recyclerView = recyclerViewIn;
         emptyView = emptyViewIn;
     }
@@ -91,13 +89,13 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         holder.txtFooter.setText(eventListDTO.getEventType() + " | " + eventListDTO.getArtistName());
         holder.location.setText(eventListDTO.getVenue());
         DateFormat df = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
-        if(!eventListDTO.getStart().equals(eventListDTO.getEnd())) {
+        if (!eventListDTO.getStart().equals(eventListDTO.getEnd())) {
             holder.date.setText("Date : " + df.format(eventListDTO.getStart()) + " - " + df.format(eventListDTO.getEnd()));
         } else {
             holder.date.setText("On : " + df.format(eventListDTO.getStart()));
         }
         holder.time.setText("Time : " + eventListDTO.getFromTime() + " - " + eventListDTO.getToTime());
-        if(eventListDTO.getTsimg() != null && eventListDTO.getTsimg().trim().length() > 0) {
+        if (eventListDTO.getTsimg() != null && eventListDTO.getTsimg().trim().length() > 0) {
             String url = "http://thiraseela.com/" + eventListDTO.getTsimg();
             Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
             if (bitmap == null) {
@@ -159,7 +157,7 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.filteredArtistListDTOs.clear();
             adapter.filteredArtistListDTOs.addAll((ArrayList<EventListDTO>) results.values);
-            if(adapter.filteredArtistListDTOs.size() == 0) {
+            if (adapter.filteredArtistListDTOs.size() == 0) {
                 recyclerView.setVisibility(View.GONE);
                 emptyView.setVisibility(View.VISIBLE);
             } else {

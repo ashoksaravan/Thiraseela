@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -51,6 +52,7 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
     private RelativeLayout addressLayout;
     private boolean networkAvailable = true;
     private ImageDownloader imageDownloader;
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/inner_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,16 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
 
         // Detect touched area
         detector = new SimpleGestureFilter(this, this);
+
+        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = imageDownloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            innerBG.setImageBitmap(bitmap);
+        } else {
+            imageDownloader.download(URL, innerBG, null, null);
+        }
     }
 
     @Override
@@ -145,7 +157,8 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
             protected Void doInBackground(Void... params) {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    String response = WSClient.execute(String.valueOf(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId()), "http://thiraseela.com/thiraandroidapp/troupedetailservice.php");
+                    String response = WSClient.execute(String.valueOf(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId()),
+                            "http://thiraseela.com/thiraandroidapp/troupedetailservice.php");
                     Log.d("response", response);
                     troupeDetailDTO = mapper.readValue(response, TroupeDetailDTO.class);
                 } catch (IOException e) {
@@ -199,11 +212,11 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(TroupesListActivity.TROUPE_LIST_DTOS.get(i).getName());
                     }
-                    String url = "http://thiraseela.com/gleimo/Troupes/images/truopes" + TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
+                    String url = "http://thiraseela.com/gleimo/Troupes/images/truopes"
+                            + TroupesListActivity.TROUPE_LIST_DTOS.get(i).getId() + "/thumb/logo.jpeg";
                     if (imageDownloader == null) {
                         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                        int memClassBytes = am.getMemoryClass();
-                        imageDownloader = new ImageDownloader(memClassBytes);
+                        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
                     }
                     Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
                     if (bitmap == null) {
@@ -239,11 +252,20 @@ public class TroupesDetailActivity extends AppCompatActivity implements SimpleGe
             case R.id.action_home:
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                getApplicationContext().startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+                }
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, 0);
     }
 }

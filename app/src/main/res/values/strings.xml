@@ -19,7 +19,7 @@
     <string name="title_activity_academy_detail">Academy Detail</string>
     <string name="title_activity_events_detail">Events Details</string>
     <string name="loading">Loading…</string>
-	<string name="home">Home</string>
+    <string name="home">Home</string>
     <string name="event_name">Event Name</string>
     <string name="category">Category</string>
     <string name="by">By</string>

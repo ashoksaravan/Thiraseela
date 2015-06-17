@@ -1,90 +1,100 @@
 package com.ashoksm.thiraseela.dto;
 
 public class TroupeListDTO {
-	
-	/** id. */
-	private Integer id;
 
-	/** name. */
-	private String name;
+    /**
+     * id.
+     */
+    private Integer id;
 
-	/** place. */
-	private String place;
+    /**
+     * name.
+     */
+    private String name;
 
-	/** name. */
-	private String city;
+    /**
+     * place.
+     */
+    private String place;
 
-	/** prgrmName. */
-	private String prgrmName;
+    /**
+     * name.
+     */
+    private String city;
 
-	/**
-	 * @return the id
-	 */
-	public final Integer getId() {
-		return id;
-	}
+    /**
+     * prgrmName.
+     */
+    private String prgrmName;
 
-	/**
-	 * @param id the id to set
-	 */
-	public final void setId(Integer id) {
-		this.id = id;
-	}
+    /**
+     * @return the id
+     */
+    public final Integer getId() {
+        return id;
+    }
 
-	/**
-	 * @return the name
-	 */
-	public final String getName() {
-		return name;
-	}
+    /**
+     * @param id the id to set
+     */
+    public final void setId(Integer id) {
+        this.id = id;
+    }
 
-	/**
-	 * @param name the name to set
-	 */
-	public final void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @return the name
+     */
+    public final String getName() {
+        return name;
+    }
 
-	/**
-	 * @return the place
-	 */
-	public final String getPlace() {
-		return place;
-	}
+    /**
+     * @param name the name to set
+     */
+    public final void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @param place the place to set
-	 */
-	public final void setPlace(String place) {
-		this.place = place;
-	}
+    /**
+     * @return the place
+     */
+    public final String getPlace() {
+        return place;
+    }
 
-	/**
-	 * @return the city
-	 */
-	public final String getCity() {
-		return city;
-	}
+    /**
+     * @param place the place to set
+     */
+    public final void setPlace(String place) {
+        this.place = place;
+    }
 
-	/**
-	 * @param city the city to set
-	 */
-	public final void setCity(String city) {
-		this.city = city;
-	}
+    /**
+     * @return the city
+     */
+    public final String getCity() {
+        return city;
+    }
 
-	/**
-	 * @return the prgrmName
-	 */
-	public String getPrgrmName() {
-		return prgrmName;
-	}
+    /**
+     * @param city the city to set
+     */
+    public final void setCity(String city) {
+        this.city = city;
+    }
 
-	/**
-	 * @param prgrmName the prgrmName to set
-	 */
-	public void setPrgrmName(String prgrmName) {
-		this.prgrmName = prgrmName;
-	}
+    /**
+     * @return the prgrmName
+     */
+    public String getPrgrmName() {
+        return prgrmName;
+    }
+
+    /**
+     * @param prgrmName the prgrmName to set
+     */
+    public void setPrgrmName(String prgrmName) {
+        this.prgrmName = prgrmName;
+    }
 
 }

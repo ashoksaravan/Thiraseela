@@ -55,9 +55,8 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         filteredArtistListDTOs.addAll(artistListVOsIn);
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
                 R.mipmap.ic_launcher);
-        ActivityManager am = (ActivityManager)  contextIn.getSystemService(Context.ACTIVITY_SERVICE);
-        int memClassBytes = am.getMemoryClass();
-        imageDownloader = new ImageDownloader(memClassBytes);
+        ActivityManager am = (ActivityManager) contextIn.getSystemService(Context.ACTIVITY_SERVICE);
+        imageDownloader = ImageDownloader.getInstance(am.getMemoryClass());
         context = contextIn;
         recyclerView = recyclerViewIn;
         emptyView = emptyViewIn;
@@ -82,7 +81,7 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         holder.txtFooter.setText(artistListDTO.getTitle());
         String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + artistListDTO.getId() + "/thumb/Perfmr_img.jpeg";
         Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
-        if(bitmap == null) {
+        if (bitmap == null) {
             imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);
         } else {
             holder.imageView.setImageBitmap(bitmap);
@@ -140,7 +139,7 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.filteredArtistListDTOs.clear();
             adapter.filteredArtistListDTOs.addAll((ArrayList<ArtistListDTO>) results.values);
-            if(adapter.getFilteredArtistListDTOs().size() == 0) {
+            if (adapter.getFilteredArtistListDTOs().size() == 0) {
                 recyclerView.setVisibility(View.GONE);
                 emptyView.setVisibility(View.VISIBLE);
             } else {

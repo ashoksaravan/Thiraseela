@@ -69,7 +69,7 @@ public class AboutUSActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                if(networkAvailable) {
+                if (networkAvailable) {
                     about.setText(response);
                     // HIDE THE SPINNER WHILE LOADING FEEDS
                     progressLayout.setVisibility(View.GONE);
@@ -82,5 +82,11 @@ public class AboutUSActivity extends AppCompatActivity {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, 0);
     }
 }

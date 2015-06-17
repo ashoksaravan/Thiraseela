@@ -1,6 +1,9 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.adapter.TroupesListAdapter;
 import com.ashoksm.thiraseela.dto.TroupeListDTO;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 import com.ashoksm.thiraseela.utils.RecyclerItemClickListener;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,6 +41,7 @@ public class TroupesListActivity extends AppCompatActivity {
     private TroupesListAdapter adapter = null;
     public static final List<TroupeListDTO> TROUPE_LIST_DTOS = new ArrayList<>();
     private boolean networkAvailable = true;
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/inner_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +66,7 @@ public class TroupesListActivity extends AppCompatActivity {
         loadDetails(mRecyclerView, emptyView);
 
         Button retryButton = (Button) findViewById(R.id.retryButton);
-        retryButton.setOnClickListener(new View.OnClickListener(){
+        retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadDetails(mRecyclerView, emptyView);
@@ -72,11 +78,12 @@ public class TroupesListActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(), TroupesDetailActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         TroupeListDTO troupeListDTO = adapter.getFilteredTroupeListDTOs().get(position);
                         int i = TROUPE_LIST_DTOS.indexOf(troupeListDTO);
                         intent.putExtra(EXTRA_TROUPE_ID, String.valueOf(i));
-                        getApplicationContext().startActivity(intent);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_out_left, 0);
                     }
                 })
         );
@@ -97,6 +104,16 @@ public class TroupesListActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            innerBG.setImageBitmap(bitmap);
+        } else {
+            downloader.download(URL, innerBG, null, null);
+        }
     }
 
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
@@ -135,7 +152,7 @@ public class TroupesListActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void result) {
-                if(networkAvailable) {
+                if (networkAvailable) {
                     adapter = new TroupesListAdapter(TROUPE_LIST_DTOS, TroupesListActivity.this, mRecyclerView, emptyView);
                     mRecyclerView.setAdapter(adapter);
                     // HIDE THE SPINNER WHILE LOADING FEEDS
@@ -149,5 +166,17 @@ public class TroupesListActivity extends AppCompatActivity {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.slide_in_left, 0);
     }
 }
