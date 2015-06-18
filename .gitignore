@@ -2,6 +2,6 @@
 /local.properties
 .DS_Store
 /build
+/app/build
 .idea
-Thiraseela.iml
 *.iml

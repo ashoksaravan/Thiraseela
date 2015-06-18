@@ -1,5 +1,8 @@
 package com.ashoksm.thiraseela.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,17 +10,21 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
+import com.ashoksm.thiraseela.utils.ImageDownloader;
 import com.ashoksm.thiraseela.wsclient.WSClient;
 
 import java.io.IOException;
 
 
 public class AboutUSActivity extends AppCompatActivity {
+
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/home_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,16 @@ public class AboutUSActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
         setSupportActionBar(toolbar);
         final TextView about = (TextView) findViewById(R.id.about_us);
+
+        ImageView homeBG = (ImageView) findViewById(R.id.home_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            homeBG.setImageBitmap(bitmap);
+        } else {
+            downloader.download(URL, homeBG, null, null);
+        }
 
         load(about);
 
