@@ -50,6 +50,16 @@ public class ArtistListActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_navigation_arrow_back);
         setSupportActionBar(toolbar);
 
+        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            innerBG.setImageBitmap(bitmap);
+        } else {
+            downloader.download(URL, innerBG, null, null);
+        }
+
         EditText searchText = (EditText) findViewById(R.id.search_bar);
         final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.artist_list_view);
         final TextView emptyView = (TextView) findViewById(R.id.empty_view);
@@ -102,15 +112,6 @@ public class ArtistListActivity extends AppCompatActivity {
                 }
             }
         });
-        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
-        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
-        if (bitmap != null) {
-            innerBG.setImageBitmap(bitmap);
-        } else {
-            downloader.download(URL, innerBG, null, null);
-        }
     }
 
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
