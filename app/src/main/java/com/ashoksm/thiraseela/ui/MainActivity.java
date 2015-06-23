@@ -4,12 +4,14 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
 import com.ashoksm.thiraseela.utils.ImageDownloader;
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
         Button events = (Button) findViewById(R.id.events);
         Button aboutUS = (Button) findViewById(R.id.about_us);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         ImageView homeBG = (ImageView) findViewById(R.id.home_bg);
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
@@ -39,8 +44,15 @@ public class MainActivity extends AppCompatActivity {
             downloader.download(URL, homeBG, null, null);
         }
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        TextView info = (TextView) findViewById(R.id.info);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "info@thiraseela.com", null));
+                startActivity(Intent.createChooser(intent, "Complete action using"));
+            }
+        });
 
         artists.setOnClickListener(new View.OnClickListener() {
             @Override

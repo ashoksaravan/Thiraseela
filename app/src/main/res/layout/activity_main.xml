@@ -56,7 +56,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_selector"
                     android:text="@string/artists"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <Button
                     android:id="@+id/troupes"
@@ -65,7 +67,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_selector"
                     android:text="@string/troupes"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <Button
                     android:id="@+id/academy"
@@ -74,7 +78,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_selector"
                     android:text="@string/academy"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <Button
                     android:id="@+id/events"
@@ -83,7 +89,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_selector"
                     android:text="@string/events"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <Button
                     android:id="@+id/about_us"
@@ -92,7 +100,9 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_selector"
                     android:text="@string/about_us"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
             </LinearLayout>
         </ScrollView>
 

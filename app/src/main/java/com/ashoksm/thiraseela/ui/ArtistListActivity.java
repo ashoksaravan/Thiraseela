@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +60,16 @@ public class ArtistListActivity extends AppCompatActivity {
         } else {
             downloader.download(URL, innerBG, null, null);
         }
+
+        TextView info = (TextView) findViewById(R.id.info);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "info@thiraseela.com", null));
+                startActivity(Intent.createChooser(intent, "Complete action using"));
+            }
+        });
 
         EditText searchText = (EditText) findViewById(R.id.search_bar);
         final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.artist_list_view);

@@ -174,10 +174,8 @@ public class ImageDownloader {
             try {
                 url = params[0];
                 Bitmap bitmap = BitmapFactory.decodeStream(new URL((params[0])).openStream());
-                if (url.contains("home_bg.png") || url.contains("inner_bg.png")) {
-                    if (bitmap.getWidth() > 300 && bitmap.getHeight() > 400) {
-                        bitmap = getResizedBitmap(bitmap, 300, 400);
-                    }
+                if (bitmap.getWidth() > 300 && bitmap.getHeight() > 400) {
+                    bitmap = getResizedBitmap(bitmap, 300, 400);
                 }
                 addBitmapToMemoryCache(url, bitmap);
                 return bitmap;

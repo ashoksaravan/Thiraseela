@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -73,6 +74,26 @@ public class EventsListActivity extends AppCompatActivity {
             }
         });
 
+        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
+        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
+        if (bitmap != null) {
+            innerBG.setImageBitmap(bitmap);
+        } else {
+            downloader.download(URL, innerBG, null, null);
+        }
+
+        TextView info = (TextView) findViewById(R.id.info);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "info@thiraseela.com", null));
+                startActivity(Intent.createChooser(intent, "Complete action using"));
+            }
+        });
+
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -104,16 +125,6 @@ public class EventsListActivity extends AppCompatActivity {
                 }
             }
         });
-
-        ImageView innerBG = (ImageView) findViewById(R.id.inner_bg);
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        ImageDownloader downloader = ImageDownloader.getInstance(am.getMemoryClass());
-        Bitmap bitmap = downloader.getBitmapFromMemCache(URL);
-        if (bitmap != null) {
-            innerBG.setImageBitmap(bitmap);
-        } else {
-            downloader.download(URL, innerBG, null, null);
-        }
     }
 
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {

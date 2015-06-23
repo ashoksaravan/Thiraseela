@@ -2,7 +2,9 @@ package com.ashoksm.thiraseela.ui;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -45,6 +48,16 @@ public class AboutUSActivity extends AppCompatActivity {
             downloader.download(URL, homeBG, null, null);
         }
 
+        TextView info = (TextView) findViewById(R.id.info);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "info@thiraseela.com", null));
+                startActivity(Intent.createChooser(intent, "Complete action using"));
+            }
+        });
+
         load(about);
 
         Button retryButton = (Button) findViewById(R.id.retryButton);
@@ -60,7 +73,7 @@ public class AboutUSActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, Void>() {
 
             LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
-            ScrollView contentLayout = (ScrollView) findViewById(R.id.contentLayout);
+            RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
             LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
             String response = "";
             boolean networkAvailable = true;
