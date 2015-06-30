@@ -12,10 +12,22 @@ android {
         versionName "1.0"
     }
 
+    signingConfigs {
+
+        release {
+            storeFile file("../keystore/thiraseela.jks")
+            storePassword "ashok1984"
+            keyAlias "thiraseela"
+            keyPassword "ashok1984"
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            debuggable false
+            signingConfig signingConfigs.release
         }
     }
 }
