@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ashoksm.thiraseela.R;
@@ -100,7 +99,7 @@ public class AboutUSActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void result) {
                 if (networkAvailable) {
-                    about.setText(response);
+                    about.setText(response.replaceAll("'", "\r\n"));
                     // HIDE THE SPINNER WHILE LOADING FEEDS
                     progressLayout.setVisibility(View.GONE);
                     contentLayout.setVisibility(View.VISIBLE);
