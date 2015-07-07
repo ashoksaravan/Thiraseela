@@ -50,7 +50,8 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public AcademyListAdapter(List<AcademyListDTO> academyListDTOsIn, Context contextIn, RecyclerView recyclerViewIn, TextView emptyViewIn) {
+    public AcademyListAdapter(List<AcademyListDTO> academyListDTOsIn, Context contextIn, RecyclerView recyclerViewIn,
+                              TextView emptyViewIn) {
         this.academyListDTOs = academyListDTOsIn;
         filteredAcademyListDTOs.addAll(academyListDTOsIn);
         context = contextIn;
@@ -78,7 +79,8 @@ public class AcademyListAdapter extends RecyclerView.Adapter<AcademyListAdapter.
         final AcademyListDTO academyListDTO = filteredAcademyListDTOs.get(position);
         holder.txtHeader.setText(academyListDTO.getName());
         holder.txtFooter.setText(academyListDTO.getPlace() + ", " + academyListDTO.getCity());
-        String url = "http://thiraseela.com/gleimo/Academy/images/academy" + academyListDTO.getId() + "/thumb/logo.jpeg";
+        String url =
+                "http://thiraseela.com/gleimo/Academy/images/academy" + academyListDTO.getId() + "/thumb/logo.jpeg";
         Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
         if (bitmap == null) {
             imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);

@@ -59,7 +59,8 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public EventsListAdapter(List<EventListDTO> eventListDTOsIn, Context contextIn, RecyclerView recyclerViewIn, TextView emptyViewIn) {
+    public EventsListAdapter(List<EventListDTO> eventListDTOsIn, Context contextIn, RecyclerView recyclerViewIn,
+                             TextView emptyViewIn) {
         eventListDTOs = eventListDTOsIn;
         filteredArtistListDTOs.addAll(eventListDTOsIn);
         context = contextIn;
@@ -90,7 +91,8 @@ public class EventsListAdapter extends RecyclerView.Adapter<EventsListAdapter.Vi
         holder.location.setText(eventListDTO.getVenue());
         DateFormat df = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
         if (!eventListDTO.getStart().equals(eventListDTO.getEnd())) {
-            holder.date.setText("Date : " + df.format(eventListDTO.getStart()) + " - " + df.format(eventListDTO.getEnd()));
+            holder.date.setText(
+                    "Date : " + df.format(eventListDTO.getStart()) + " - " + df.format(eventListDTO.getEnd()));
         } else {
             holder.date.setText("On : " + df.format(eventListDTO.getStart()));
         }

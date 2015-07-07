@@ -86,18 +86,19 @@ public class TroupesListActivity extends AppCompatActivity {
         });
 
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(getApplicationContext(), TroupesDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        TroupeListDTO troupeListDTO = adapter.getFilteredTroupeListDTOs().get(position);
-                        int i = TROUPE_LIST_DTOS.indexOf(troupeListDTO);
-                        intent.putExtra(EXTRA_TROUPE_ID, String.valueOf(i));
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_out_left, 0);
-                    }
-                })
+                new RecyclerItemClickListener(getApplicationContext(),
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(getApplicationContext(), TroupesDetailActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                TroupeListDTO troupeListDTO = adapter.getFilteredTroupeListDTOs().get(position);
+                                int i = TROUPE_LIST_DTOS.indexOf(troupeListDTO);
+                                intent.putExtra(EXTRA_TROUPE_ID, String.valueOf(i));
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.slide_out_left, 0);
+                            }
+                        })
         );
 
         searchText.addTextChangedListener(new TextWatcher() {
@@ -130,7 +131,7 @@ public class TroupesListActivity extends AppCompatActivity {
 
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
         new AsyncTask<Void, Void, Void>() {
-            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
+            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressView);
             RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
             LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
 
@@ -149,7 +150,8 @@ public class TroupesListActivity extends AppCompatActivity {
                     TROUPE_LIST_DTOS.clear();
                     ObjectMapper mapper = new ObjectMapper();
                     try {
-                        String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/troupelistservice.php");
+                        String response =
+                                WSClient.execute("", "http://thiraseela.com/thiraandroidapp/troupelistservice.php");
                         Log.d("response", response);
                         List<TroupeListDTO> temp = mapper.readValue(response,
                                 TypeFactory.defaultInstance().constructCollectionType(List.class, TroupeListDTO.class));
@@ -165,7 +167,8 @@ public class TroupesListActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void result) {
                 if (networkAvailable) {
-                    adapter = new TroupesListAdapter(TROUPE_LIST_DTOS, TroupesListActivity.this, mRecyclerView, emptyView);
+                    adapter = new TroupesListAdapter(TROUPE_LIST_DTOS, TroupesListActivity.this, mRecyclerView,
+                            emptyView);
                     mRecyclerView.setAdapter(adapter);
                     // HIDE THE SPINNER WHILE LOADING FEEDS
                     progressLayout.setVisibility(View.GONE);

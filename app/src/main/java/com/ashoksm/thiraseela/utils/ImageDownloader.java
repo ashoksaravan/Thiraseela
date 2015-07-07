@@ -4,16 +4,17 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 
@@ -116,18 +117,61 @@ public class ImageDownloader {
         return bitmap;
     }
 
-    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
+    private Bitmap getBitmap(String path) {
 
-        // "RECREATE" THE NEW BITMAP
-        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        InputStream in;
+        try {
+            final int IMAGE_MAX_SIZE = 150000; // 150Kb
+            in = new URL(path).openStream();
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+
+
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) > IMAGE_MAX_SIZE) {
+                scale++;
+            }
+            Log.d(this.getClass().getName(), "scale = " + scale + ", orig-width: " + o.outWidth + ", orig - height: " + o
+                    .outHeight);
+
+            Bitmap b;
+            in = new URL(path).openStream();
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+                Log.d(this.getClass().getName(), "1th scale operation dimensions - width: " + width + ", height: " + height);
+
+                double y = Math.sqrt(IMAGE_MAX_SIZE / (((double) width) / height));
+                double x = (y / height) * width;
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x, (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            Log.d(this.getClass().getName(), "bitmap size - width: " + b.getWidth() + ", height: " + b.getHeight());
+            return b;
+        } catch (IOException e) {
+            Log.e(this.getClass().getName(), e.getMessage(), e);
+            return null;
+        }
     }
 
     static class AsyncDrawable extends BitmapDrawable {
@@ -171,17 +215,10 @@ public class ImageDownloader {
         // Actual download method, run in the task thread
         protected Bitmap doInBackground(String... params) {
             // params comes from the execute() call: params[0] is the url.
-            try {
-                url = params[0];
-                Bitmap bitmap = BitmapFactory.decodeStream(new URL((params[0])).openStream());
-                if (bitmap.getWidth() > 300 && bitmap.getHeight() > 400) {
-                    bitmap = getResizedBitmap(bitmap, 300, 400);
-                }
-                addBitmapToMemoryCache(url, bitmap);
-                return bitmap;
-            } catch (IOException e) {
-                return null;
-            }
+            url = params[0];
+            Bitmap bitmap = getBitmap(url);
+            addBitmapToMemoryCache(url, bitmap);
+            return bitmap;
         }
 
         @Override

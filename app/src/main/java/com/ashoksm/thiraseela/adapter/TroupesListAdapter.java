@@ -52,7 +52,8 @@ public class TroupesListAdapter extends RecyclerView.Adapter<TroupesListAdapter.
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn, Context contextIn, RecyclerView recyclerViewIn, TextView emptyViewIn) {
+    public TroupesListAdapter(List<TroupeListDTO> troupeListDTOsIn, Context contextIn, RecyclerView recyclerViewIn,
+                              TextView emptyViewIn) {
         this.troupeListDTOs = troupeListDTOsIn;
         filteredTroupeListDTOs.addAll(troupeListDTOsIn);
         context = contextIn;

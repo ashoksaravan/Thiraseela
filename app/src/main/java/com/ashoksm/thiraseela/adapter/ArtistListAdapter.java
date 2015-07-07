@@ -50,7 +50,8 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ArtistListAdapter(List<ArtistListDTO> artistListVOsIn, Context contextIn, RecyclerView recyclerViewIn, TextView emptyViewIn) {
+    public ArtistListAdapter(List<ArtistListDTO> artistListVOsIn, Context contextIn, RecyclerView recyclerViewIn,
+                             TextView emptyViewIn) {
         artistListDTOs = artistListVOsIn;
         filteredArtistListDTOs.addAll(artistListVOsIn);
         placeHolderImage = BitmapFactory.decodeResource(contextIn.getResources(),
@@ -79,7 +80,8 @@ public class ArtistListAdapter extends RecyclerView.Adapter<ArtistListAdapter.Vi
         final ArtistListDTO artistListDTO = filteredArtistListDTOs.get(position);
         holder.txtHeader.setText(artistListDTO.getName());
         holder.txtFooter.setText(artistListDTO.getTitle());
-        String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + artistListDTO.getId() + "/thumb/Perfmr_img.jpeg";
+        String url = "http://thiraseela.com/gleimo/performers/images/perfomr" + artistListDTO.getId() +
+                "/thumb/Perfmr_img.jpeg";
         Bitmap bitmap = imageDownloader.getBitmapFromMemCache(url);
         if (bitmap == null) {
             imageDownloader.download(url, holder.imageView, context.getResources(), placeHolderImage);

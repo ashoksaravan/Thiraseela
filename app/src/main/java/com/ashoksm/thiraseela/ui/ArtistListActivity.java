@@ -93,18 +93,19 @@ public class ArtistListActivity extends AppCompatActivity {
         loadDetails(mRecyclerView, emptyView);
 
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(getApplicationContext(), ArtistDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        ArtistListDTO artistListDTO = adapter.getFilteredArtistListDTOs().get(position);
-                        int i = ARTIST_LIST_VOS.indexOf(artistListDTO);
-                        intent.putExtra(EXTRA_PERFORMER_NAME, String.valueOf(i));
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_out_left, 0);
-                    }
-                })
+                new RecyclerItemClickListener(getApplicationContext(),
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(getApplicationContext(), ArtistDetailActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                ArtistListDTO artistListDTO = adapter.getFilteredArtistListDTOs().get(position);
+                                int i = ARTIST_LIST_VOS.indexOf(artistListDTO);
+                                intent.putExtra(EXTRA_PERFORMER_NAME, String.valueOf(i));
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.slide_out_left, 0);
+                            }
+                        })
         );
 
         searchText.addTextChangedListener(new TextWatcher() {
@@ -127,7 +128,7 @@ public class ArtistListActivity extends AppCompatActivity {
 
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
         new AsyncTask<Void, Void, Void>() {
-            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
+            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressView);
             RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
             LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
 
@@ -146,7 +147,8 @@ public class ArtistListActivity extends AppCompatActivity {
                     ARTIST_LIST_VOS.clear();
                     ObjectMapper mapper = new ObjectMapper();
                     try {
-                        String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/performerlistservice.php");
+                        String response =
+                                WSClient.execute("", "http://thiraseela.com/thiraandroidapp/performerlistservice.php");
                         Log.d("response", response);
                         List<ArtistListDTO> temp = mapper.readValue(response,
                                 TypeFactory.defaultInstance().constructCollectionType(List.class, ArtistListDTO.class));

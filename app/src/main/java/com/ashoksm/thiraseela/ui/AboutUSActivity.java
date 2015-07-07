@@ -71,7 +71,7 @@ public class AboutUSActivity extends AppCompatActivity {
     private void load(final TextView about) {
         new AsyncTask<Void, Void, Void>() {
 
-            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
+            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressView);
             RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
             LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
             String response = "";

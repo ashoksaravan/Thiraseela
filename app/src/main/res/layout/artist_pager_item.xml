@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/artist_detail_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/contentView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/performer_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/performer_img"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher"/>
+
+            <android.support.v7.widget.CardView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                card_view:cardCornerRadius="4dp"
+                card_view:elevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/designation"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/location"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                card_view:cardCornerRadius="4dp"
+                card_view:elevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/addressLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="1dp"
+                        android:paddingTop="1dp">
+
+                        <ImageView
+                            android:id="@+id/addressImg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:contentDescription="@string/info"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_communication_email"/>
+
+                        <TextView
+                            android:id="@+id/address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/addressImg"
+                            android:layout_toRightOf="@id/addressImg"
+                            android:gravity="top"
+                            android:textColor="#000000"/>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/mobile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:drawableLeft="@drawable/ic_communication_stay_current_portrait"
+                        android:drawablePadding="5dp"
+                        android:drawableStart="@drawable/ic_communication_stay_current_portrait"
+                        android:gravity="top"
+                        android:paddingBottom="1dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="1dp"
+                        android:textColor="#000000"/>
+
+                    <TextView
+                        android:id="@+id/phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:drawableLeft="@drawable/ic_maps_local_phone"
+                        android:drawablePadding="5dp"
+                        android:drawableStart="@drawable/ic_maps_local_phone"
+                        android:gravity="top"
+                        android:paddingBottom="1dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="1dp"
+                        android:textColor="#000000"/>
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:drawableLeft="@drawable/ic_emailicon"
+                        android:drawablePadding="5dp"
+                        android:drawableStart="@drawable/ic_emailicon"
+                        android:gravity="top"
+                        android:paddingBottom="1dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="1dp"
+                        android:textColor="#000000"/>
+
+                    <TextView
+                        android:id="@+id/web"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:drawableLeft="@drawable/ic_webicon"
+                        android:drawablePadding="5dp"
+                        android:drawableStart="@drawable/ic_webicon"
+                        android:gravity="top"
+                        android:paddingBottom="1dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="1dp"
+                        android:textColor="#000000"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/aboutView"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:paddingBottom="10dp"
+                card_view:cardCornerRadius="4dp"
+                card_view:elevation="5dp">
+
+                <TextView
+                    android:id="@+id/performer_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:textColor="#000000"/>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/progress_and_timeout"/>
+
+</FrameLayout>

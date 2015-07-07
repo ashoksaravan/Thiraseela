@@ -95,18 +95,19 @@ public class EventsListActivity extends AppCompatActivity {
         });
 
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(getApplicationContext(), EventsDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        EventListDTO eventListDTO = adapter.getFilteredArtistListDTOs().get(position);
-                        int i = EVENT_LIST_DTOS.indexOf(eventListDTO);
-                        intent.putExtra(EXTRA_EVENT_NAME, String.valueOf(i));
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_out_left, 0);
-                    }
-                })
+                new RecyclerItemClickListener(getApplicationContext(),
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(getApplicationContext(), EventsDetailActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                EventListDTO eventListDTO = adapter.getFilteredArtistListDTOs().get(position);
+                                int i = EVENT_LIST_DTOS.indexOf(eventListDTO);
+                                intent.putExtra(EXTRA_EVENT_NAME, String.valueOf(i));
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.slide_out_left, 0);
+                            }
+                        })
         );
 
         searchText.addTextChangedListener(new TextWatcher() {
@@ -130,7 +131,7 @@ public class EventsListActivity extends AppCompatActivity {
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
         new AsyncTask<Void, Void, Void>() {
 
-            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
+            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressView);
             RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
             LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
 
@@ -149,7 +150,8 @@ public class EventsListActivity extends AppCompatActivity {
                     EVENT_LIST_DTOS.clear();
                     ObjectMapper mapper = new ObjectMapper();
                     try {
-                        String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/eventservice.php");
+                        String response =
+                                WSClient.execute("", "http://thiraseela.com/thiraandroidapp/eventservice.php");
                         List<EventListDTO> temp = mapper.readValue(response,
                                 TypeFactory.defaultInstance().constructCollectionType(List.class, EventListDTO.class));
                         EVENT_LIST_DTOS.addAll(temp);

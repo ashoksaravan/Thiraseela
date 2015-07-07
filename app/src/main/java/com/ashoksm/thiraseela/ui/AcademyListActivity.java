@@ -40,9 +40,9 @@ public class AcademyListActivity extends AppCompatActivity {
 
     public static final String EXTRA_ACADEMY_ID = "EXTRA_ACADEMY_ID";
     public static final List<AcademyListDTO> ACADEMY_LIST_DTOS = new ArrayList<>();
+    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/inner_bg.png";
     private AcademyListAdapter adapter = null;
     private boolean networkAvailable = true;
-    private static final String URL = "http://thiraseela.com/thiraandroidapp/images/inner_bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,18 +95,19 @@ public class AcademyListActivity extends AppCompatActivity {
         });
 
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Intent intent = new Intent(getApplicationContext(), AcademyDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        AcademyListDTO academyListDTO = adapter.getFilteredAcademyListDTOs().get(position);
-                        int i = ACADEMY_LIST_DTOS.indexOf(academyListDTO);
-                        intent.putExtra(EXTRA_ACADEMY_ID, String.valueOf(i));
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_out_left, 0);
-                    }
-                })
+                new RecyclerItemClickListener(getApplicationContext(),
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(getApplicationContext(), AcademyDetailActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                AcademyListDTO academyListDTO = adapter.getFilteredAcademyListDTOs().get(position);
+                                int i = ACADEMY_LIST_DTOS.indexOf(academyListDTO);
+                                intent.putExtra(EXTRA_ACADEMY_ID, String.valueOf(i));
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.slide_out_left, 0);
+                            }
+                        })
         );
 
         searchText.addTextChangedListener(new TextWatcher() {
@@ -130,7 +131,7 @@ public class AcademyListActivity extends AppCompatActivity {
     private void loadDetails(final RecyclerView mRecyclerView, final TextView emptyView) {
         new AsyncTask<Void, Void, Void>() {
 
-            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressLayout);
+            LinearLayout progressLayout = (LinearLayout) findViewById(R.id.progressView);
             RelativeLayout contentLayout = (RelativeLayout) findViewById(R.id.contentLayout);
             LinearLayout timeoutLayout = (LinearLayout) findViewById(R.id.timeoutLayout);
 
@@ -149,10 +150,12 @@ public class AcademyListActivity extends AppCompatActivity {
                     ACADEMY_LIST_DTOS.clear();
                     ObjectMapper mapper = new ObjectMapper();
                     try {
-                        String response = WSClient.execute("", "http://thiraseela.com/thiraandroidapp/academylistservice.php");
+                        String response =
+                                WSClient.execute("", "http://thiraseela.com/thiraandroidapp/academylistservice.php");
                         Log.d("response", response);
                         List<AcademyListDTO> temp = mapper.readValue(response,
-                                TypeFactory.defaultInstance().constructCollectionType(List.class, AcademyListDTO.class));
+                                TypeFactory.defaultInstance().constructCollectionType(List.class,
+                                        AcademyListDTO.class));
                         ACADEMY_LIST_DTOS.addAll(temp);
                     } catch (IOException e) {
                         Log.e("AcademyListActivity", e.getLocalizedMessage());
@@ -165,7 +168,8 @@ public class AcademyListActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void result) {
                 if (networkAvailable) {
-                    adapter = new AcademyListAdapter(ACADEMY_LIST_DTOS, AcademyListActivity.this, mRecyclerView, emptyView);
+                    adapter = new AcademyListAdapter(ACADEMY_LIST_DTOS, AcademyListActivity.this, mRecyclerView,
+                            emptyView);
                     mRecyclerView.setAdapter(adapter);
                     // HIDE THE SPINNER WHILE LOADING FEEDS
                     progressLayout.setVisibility(View.GONE);
